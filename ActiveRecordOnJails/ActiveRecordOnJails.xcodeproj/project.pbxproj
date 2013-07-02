@@ -1,0 +1,719 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FDF66F6F178307D3009A2E60 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF66F6E178307D3009A2E60 /* Foundation.framework */; };
+		FDF66F74178307D3009A2E60 /* ActiveRecordOnJails.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FDF66F73178307D3009A2E60 /* ActiveRecordOnJails.h */; };
+		FDF66F76178307D3009A2E60 /* ActiveRecordOnJails.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66F75178307D3009A2E60 /* ActiveRecordOnJails.m */; };
+		FDF66F7D178307D3009A2E60 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF66F7C178307D3009A2E60 /* XCTest.framework */; };
+		FDF66F7E178307D3009A2E60 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF66F6E178307D3009A2E60 /* Foundation.framework */; };
+		FDF66F80178307D3009A2E60 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF66F7F178307D3009A2E60 /* UIKit.framework */; };
+		FDF66F83178307D3009A2E60 /* libActiveRecordOnJails.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF66F6B178307D3009A2E60 /* libActiveRecordOnJails.a */; };
+		FDF66F89178307D3009A2E60 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FDF66F87178307D3009A2E60 /* InfoPlist.strings */; };
+		FDF66F8B178307D3009A2E60 /* ActiveRecordOnJailsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66F8A178307D3009A2E60 /* ActiveRecordOnJailsTests.m */; };
+		FDF66FE0178308CA009A2E60 /* ARJAcceptanceValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66F9517830841009A2E60 /* ARJAcceptanceValidator.m */; };
+		FDF66FE1178308CA009A2E60 /* ARJActiveRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66F9717830841009A2E60 /* ARJActiveRecord.m */; };
+		FDF66FE2178308CA009A2E60 /* ARJActiveRecordHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66F9917830841009A2E60 /* ARJActiveRecordHelper.m */; };
+		FDF66FE3178308CA009A2E60 /* ARJAssociationValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66F9B17830841009A2E60 /* ARJAssociationValidator.m */; };
+		FDF66FE4178308CA009A2E60 /* ARJBelongsToRelation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66F9D17830841009A2E60 /* ARJBelongsToRelation.m */; };
+		FDF66FE5178308CA009A2E60 /* ARJBlobAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66F9F17830841009A2E60 /* ARJBlobAttribute.m */; };
+		FDF66FE6178308CA009A2E60 /* ARJCustomValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FA117830841009A2E60 /* ARJCustomValidator.m */; };
+		FDF66FE7178308CA009A2E60 /* ARJDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FA317830841009A2E60 /* ARJDatabaseManager.m */; };
+		FDF66FE8178308CA009A2E60 /* ARJDateTimeAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FA517830841009A2E60 /* ARJDateTimeAttribute.m */; };
+		FDF66FE9178308CA009A2E60 /* ARJExpectationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FA717830841009A2E60 /* ARJExpectationHelper.m */; };
+		FDF66FEA178308CA009A2E60 /* ARJFloatAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FA917830841009A2E60 /* ARJFloatAttribute.m */; };
+		FDF66FEB178308CA009A2E60 /* ARJFormatValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FAB17830841009A2E60 /* ARJFormatValidator.m */; };
+		FDF66FEC178308CA009A2E60 /* ARJHasManyRelation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FAD17830841009A2E60 /* ARJHasManyRelation.m */; };
+		FDF66FED178308CA009A2E60 /* ARJHasOneRelation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FAF17830841009A2E60 /* ARJHasOneRelation.m */; };
+		FDF66FEE178308CA009A2E60 /* ARJIntegerAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FB117830841009A2E60 /* ARJIntegerAttribute.m */; };
+		FDF66FEF178308CA009A2E60 /* ARJLengthValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FB317830841009A2E60 /* ARJLengthValidator.m */; };
+		FDF66FF0178308CA009A2E60 /* ARJModelAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FB517830841009A2E60 /* ARJModelAttribute.m */; };
+		FDF66FF1178308CA009A2E60 /* ARJModelValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FB717830841009A2E60 /* ARJModelValidator.m */; };
+		FDF66FF2178308CA009A2E60 /* ARJNumericalityValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FB917830841009A2E60 /* ARJNumericalityValidator.m */; };
+		FDF66FF3178308CA009A2E60 /* ARJPresenceValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FBB17830841009A2E60 /* ARJPresenceValidator.m */; };
+		FDF66FF4178308CA009A2E60 /* ARJPropertyObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FBD17830841009A2E60 /* ARJPropertyObserver.m */; };
+		FDF66FF5178308CA009A2E60 /* ARJRelation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FBF17830841009A2E60 /* ARJRelation.m */; };
+		FDF66FF6178308CA009A2E60 /* ARJScope.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FC117830841009A2E60 /* ARJScope.m */; };
+		FDF66FF7178308CA009A2E60 /* ARJSQLDeleteInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FC317830841009A2E60 /* ARJSQLDeleteInvocation.m */; };
+		FDF66FF8178308CA009A2E60 /* ARJSQLInsertInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FC517830841009A2E60 /* ARJSQLInsertInvocation.m */; };
+		FDF66FF9178308CA009A2E60 /* ARJSQLInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FC717830841009A2E60 /* ARJSQLInvocation.m */; };
+		FDF66FFA178308CA009A2E60 /* ARJSQLSelectInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FC917830841009A2E60 /* ARJSQLSelectInvocation.m */; };
+		FDF66FFB178308CA009A2E60 /* ARJSQLUpdateInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FCB17830841009A2E60 /* ARJSQLUpdateInvocation.m */; };
+		FDF66FFC178308CA009A2E60 /* ARJStringAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FCD17830841009A2E60 /* ARJStringAttribute.m */; };
+		FDF66FFD178308CA009A2E60 /* ARJUniquenessValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FCF17830841009A2E60 /* ARJUniquenessValidator.m */; };
+		FDF66FFE178308CA009A2E60 /* ARJValidationErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FD117830841009A2E60 /* ARJValidationErrors.m */; };
+		FDF66FFF178308CA009A2E60 /* ActiveRecordOnJails.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66F75178307D3009A2E60 /* ActiveRecordOnJails.m */; };
+		FDF67000178308D4009A2E60 /* ARJActiveRecordInternalTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FD317830856009A2E60 /* ARJActiveRecordInternalTests.m */; };
+		FDF67001178308D4009A2E60 /* ARJActiveRecordMultipleDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FD517830856009A2E60 /* ARJActiveRecordMultipleDatabaseTests.m */; };
+		FDF67002178308D4009A2E60 /* ARJActiveRecordTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FD717830856009A2E60 /* ARJActiveRecordTests.m */; };
+		FDF67003178308D4009A2E60 /* ARJValidationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FD917830856009A2E60 /* ARJValidationTests.m */; };
+		FDF67004178308D4009A2E60 /* ExpectationHelperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FDB17830856009A2E60 /* ExpectationHelperTests.m */; };
+		FDF67005178308D4009A2E60 /* SPTestOrganization.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FDD17830856009A2E60 /* SPTestOrganization.m */; };
+		FDF67006178308D4009A2E60 /* SPTestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF66FDF17830856009A2E60 /* SPTestUser.m */; };
+		FDF6703E178309A5009A2E60 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF670341783098E009A2E60 /* FMDatabase.m */; };
+		FDF6703F178309A5009A2E60 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF670361783098E009A2E60 /* FMDatabaseAdditions.m */; };
+		FDF67040178309A5009A2E60 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF670381783098E009A2E60 /* FMDatabasePool.m */; };
+		FDF67041178309A5009A2E60 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF6703A1783098E009A2E60 /* FMDatabaseQueue.m */; };
+		FDF67042178309A5009A2E60 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF6703D1783098E009A2E60 /* FMResultSet.m */; };
+		FDF67043178309A5009A2E60 /* ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF6700917830964009A2E60 /* ActiveSupportInflector.m */; };
+		FDF67044178309A5009A2E60 /* NSString+ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF6700F17830964009A2E60 /* NSString+ActiveSupportInflector.m */; };
+		FDF6704617830A22009A2E60 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF6704517830A22009A2E60 /* libsqlite3.0.dylib */; };
+		FDF6704717830A2A009A2E60 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF6704517830A22009A2E60 /* libsqlite3.0.dylib */; };
+		FDF6704917830A3A009A2E60 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF6704817830A3A009A2E60 /* SenTestingKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FDF66F81178307D3009A2E60 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDF66F63178307D3009A2E60 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FDF66F6A178307D3009A2E60;
+			remoteInfo = ActiveRecordOnJails;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FDF66F69178307D3009A2E60 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				FDF66F74178307D3009A2E60 /* ActiveRecordOnJails.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FDF66F6B178307D3009A2E60 /* libActiveRecordOnJails.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libActiveRecordOnJails.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FDF66F6E178307D3009A2E60 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FDF66F72178307D3009A2E60 /* ActiveRecordOnJails-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ActiveRecordOnJails-Prefix.pch"; sourceTree = "<group>"; };
+		FDF66F73178307D3009A2E60 /* ActiveRecordOnJails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActiveRecordOnJails.h; sourceTree = "<group>"; };
+		FDF66F75178307D3009A2E60 /* ActiveRecordOnJails.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActiveRecordOnJails.m; sourceTree = "<group>"; };
+		FDF66F7B178307D3009A2E60 /* ActiveRecordOnJailsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ActiveRecordOnJailsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FDF66F7C178307D3009A2E60 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		FDF66F7F178307D3009A2E60 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		FDF66F86178307D3009A2E60 /* ActiveRecordOnJailsTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ActiveRecordOnJailsTests-Info.plist"; sourceTree = "<group>"; };
+		FDF66F88178307D3009A2E60 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		FDF66F8A178307D3009A2E60 /* ActiveRecordOnJailsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActiveRecordOnJailsTests.m; sourceTree = "<group>"; };
+		FDF66F9417830841009A2E60 /* ARJAcceptanceValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJAcceptanceValidator.h; sourceTree = "<group>"; };
+		FDF66F9517830841009A2E60 /* ARJAcceptanceValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJAcceptanceValidator.m; sourceTree = "<group>"; };
+		FDF66F9617830841009A2E60 /* ARJActiveRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJActiveRecord.h; sourceTree = "<group>"; };
+		FDF66F9717830841009A2E60 /* ARJActiveRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJActiveRecord.m; sourceTree = "<group>"; };
+		FDF66F9817830841009A2E60 /* ARJActiveRecordHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJActiveRecordHelper.h; sourceTree = "<group>"; };
+		FDF66F9917830841009A2E60 /* ARJActiveRecordHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJActiveRecordHelper.m; sourceTree = "<group>"; };
+		FDF66F9A17830841009A2E60 /* ARJAssociationValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJAssociationValidator.h; sourceTree = "<group>"; };
+		FDF66F9B17830841009A2E60 /* ARJAssociationValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJAssociationValidator.m; sourceTree = "<group>"; };
+		FDF66F9C17830841009A2E60 /* ARJBelongsToRelation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJBelongsToRelation.h; sourceTree = "<group>"; };
+		FDF66F9D17830841009A2E60 /* ARJBelongsToRelation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJBelongsToRelation.m; sourceTree = "<group>"; };
+		FDF66F9E17830841009A2E60 /* ARJBlobAttribute.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJBlobAttribute.h; sourceTree = "<group>"; };
+		FDF66F9F17830841009A2E60 /* ARJBlobAttribute.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJBlobAttribute.m; sourceTree = "<group>"; };
+		FDF66FA017830841009A2E60 /* ARJCustomValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJCustomValidator.h; sourceTree = "<group>"; };
+		FDF66FA117830841009A2E60 /* ARJCustomValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJCustomValidator.m; sourceTree = "<group>"; };
+		FDF66FA217830841009A2E60 /* ARJDatabaseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJDatabaseManager.h; sourceTree = "<group>"; };
+		FDF66FA317830841009A2E60 /* ARJDatabaseManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJDatabaseManager.m; sourceTree = "<group>"; };
+		FDF66FA417830841009A2E60 /* ARJDateTimeAttribute.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJDateTimeAttribute.h; sourceTree = "<group>"; };
+		FDF66FA517830841009A2E60 /* ARJDateTimeAttribute.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJDateTimeAttribute.m; sourceTree = "<group>"; };
+		FDF66FA617830841009A2E60 /* ARJExpectationHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJExpectationHelper.h; sourceTree = "<group>"; };
+		FDF66FA717830841009A2E60 /* ARJExpectationHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJExpectationHelper.m; sourceTree = "<group>"; };
+		FDF66FA817830841009A2E60 /* ARJFloatAttribute.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJFloatAttribute.h; sourceTree = "<group>"; };
+		FDF66FA917830841009A2E60 /* ARJFloatAttribute.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJFloatAttribute.m; sourceTree = "<group>"; };
+		FDF66FAA17830841009A2E60 /* ARJFormatValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJFormatValidator.h; sourceTree = "<group>"; };
+		FDF66FAB17830841009A2E60 /* ARJFormatValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJFormatValidator.m; sourceTree = "<group>"; };
+		FDF66FAC17830841009A2E60 /* ARJHasManyRelation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJHasManyRelation.h; sourceTree = "<group>"; };
+		FDF66FAD17830841009A2E60 /* ARJHasManyRelation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJHasManyRelation.m; sourceTree = "<group>"; };
+		FDF66FAE17830841009A2E60 /* ARJHasOneRelation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJHasOneRelation.h; sourceTree = "<group>"; };
+		FDF66FAF17830841009A2E60 /* ARJHasOneRelation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJHasOneRelation.m; sourceTree = "<group>"; };
+		FDF66FB017830841009A2E60 /* ARJIntegerAttribute.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJIntegerAttribute.h; sourceTree = "<group>"; };
+		FDF66FB117830841009A2E60 /* ARJIntegerAttribute.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJIntegerAttribute.m; sourceTree = "<group>"; };
+		FDF66FB217830841009A2E60 /* ARJLengthValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJLengthValidator.h; sourceTree = "<group>"; };
+		FDF66FB317830841009A2E60 /* ARJLengthValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJLengthValidator.m; sourceTree = "<group>"; };
+		FDF66FB417830841009A2E60 /* ARJModelAttribute.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJModelAttribute.h; sourceTree = "<group>"; };
+		FDF66FB517830841009A2E60 /* ARJModelAttribute.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJModelAttribute.m; sourceTree = "<group>"; };
+		FDF66FB617830841009A2E60 /* ARJModelValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJModelValidator.h; sourceTree = "<group>"; };
+		FDF66FB717830841009A2E60 /* ARJModelValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJModelValidator.m; sourceTree = "<group>"; };
+		FDF66FB817830841009A2E60 /* ARJNumericalityValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJNumericalityValidator.h; sourceTree = "<group>"; };
+		FDF66FB917830841009A2E60 /* ARJNumericalityValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJNumericalityValidator.m; sourceTree = "<group>"; };
+		FDF66FBA17830841009A2E60 /* ARJPresenceValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJPresenceValidator.h; sourceTree = "<group>"; };
+		FDF66FBB17830841009A2E60 /* ARJPresenceValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJPresenceValidator.m; sourceTree = "<group>"; };
+		FDF66FBC17830841009A2E60 /* ARJPropertyObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJPropertyObserver.h; sourceTree = "<group>"; };
+		FDF66FBD17830841009A2E60 /* ARJPropertyObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJPropertyObserver.m; sourceTree = "<group>"; };
+		FDF66FBE17830841009A2E60 /* ARJRelation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJRelation.h; sourceTree = "<group>"; };
+		FDF66FBF17830841009A2E60 /* ARJRelation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJRelation.m; sourceTree = "<group>"; };
+		FDF66FC017830841009A2E60 /* ARJScope.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJScope.h; sourceTree = "<group>"; };
+		FDF66FC117830841009A2E60 /* ARJScope.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJScope.m; sourceTree = "<group>"; };
+		FDF66FC217830841009A2E60 /* ARJSQLDeleteInvocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJSQLDeleteInvocation.h; sourceTree = "<group>"; };
+		FDF66FC317830841009A2E60 /* ARJSQLDeleteInvocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJSQLDeleteInvocation.m; sourceTree = "<group>"; };
+		FDF66FC417830841009A2E60 /* ARJSQLInsertInvocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJSQLInsertInvocation.h; sourceTree = "<group>"; };
+		FDF66FC517830841009A2E60 /* ARJSQLInsertInvocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJSQLInsertInvocation.m; sourceTree = "<group>"; };
+		FDF66FC617830841009A2E60 /* ARJSQLInvocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJSQLInvocation.h; sourceTree = "<group>"; };
+		FDF66FC717830841009A2E60 /* ARJSQLInvocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJSQLInvocation.m; sourceTree = "<group>"; };
+		FDF66FC817830841009A2E60 /* ARJSQLSelectInvocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJSQLSelectInvocation.h; sourceTree = "<group>"; };
+		FDF66FC917830841009A2E60 /* ARJSQLSelectInvocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJSQLSelectInvocation.m; sourceTree = "<group>"; };
+		FDF66FCA17830841009A2E60 /* ARJSQLUpdateInvocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJSQLUpdateInvocation.h; sourceTree = "<group>"; };
+		FDF66FCB17830841009A2E60 /* ARJSQLUpdateInvocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJSQLUpdateInvocation.m; sourceTree = "<group>"; };
+		FDF66FCC17830841009A2E60 /* ARJStringAttribute.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJStringAttribute.h; sourceTree = "<group>"; };
+		FDF66FCD17830841009A2E60 /* ARJStringAttribute.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJStringAttribute.m; sourceTree = "<group>"; };
+		FDF66FCE17830841009A2E60 /* ARJUniquenessValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJUniquenessValidator.h; sourceTree = "<group>"; };
+		FDF66FCF17830841009A2E60 /* ARJUniquenessValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJUniquenessValidator.m; sourceTree = "<group>"; };
+		FDF66FD017830841009A2E60 /* ARJValidationErrors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJValidationErrors.h; sourceTree = "<group>"; };
+		FDF66FD117830841009A2E60 /* ARJValidationErrors.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJValidationErrors.m; sourceTree = "<group>"; };
+		FDF66FD217830856009A2E60 /* ARJActiveRecordInternalTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJActiveRecordInternalTests.h; sourceTree = "<group>"; };
+		FDF66FD317830856009A2E60 /* ARJActiveRecordInternalTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJActiveRecordInternalTests.m; sourceTree = "<group>"; };
+		FDF66FD417830856009A2E60 /* ARJActiveRecordMultipleDatabaseTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJActiveRecordMultipleDatabaseTests.h; sourceTree = "<group>"; };
+		FDF66FD517830856009A2E60 /* ARJActiveRecordMultipleDatabaseTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJActiveRecordMultipleDatabaseTests.m; sourceTree = "<group>"; };
+		FDF66FD617830856009A2E60 /* ARJActiveRecordTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJActiveRecordTests.h; sourceTree = "<group>"; };
+		FDF66FD717830856009A2E60 /* ARJActiveRecordTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJActiveRecordTests.m; sourceTree = "<group>"; };
+		FDF66FD817830856009A2E60 /* ARJValidationTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARJValidationTests.h; sourceTree = "<group>"; };
+		FDF66FD917830856009A2E60 /* ARJValidationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARJValidationTests.m; sourceTree = "<group>"; };
+		FDF66FDA17830856009A2E60 /* ExpectationHelperTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExpectationHelperTests.h; sourceTree = "<group>"; };
+		FDF66FDB17830856009A2E60 /* ExpectationHelperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExpectationHelperTests.m; sourceTree = "<group>"; };
+		FDF66FDC17830856009A2E60 /* SPTestOrganization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPTestOrganization.h; sourceTree = "<group>"; };
+		FDF66FDD17830856009A2E60 /* SPTestOrganization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPTestOrganization.m; sourceTree = "<group>"; };
+		FDF66FDE17830856009A2E60 /* SPTestUser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPTestUser.h; sourceTree = "<group>"; };
+		FDF66FDF17830856009A2E60 /* SPTestUser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPTestUser.m; sourceTree = "<group>"; };
+		FDF6700817830964009A2E60 /* ActiveSupportInflector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActiveSupportInflector.h; sourceTree = "<group>"; };
+		FDF6700917830964009A2E60 /* ActiveSupportInflector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActiveSupportInflector.m; sourceTree = "<group>"; };
+		FDF6700A17830964009A2E60 /* ActiveSupportInflector.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ActiveSupportInflector.plist; sourceTree = "<group>"; };
+		FDF6700E17830964009A2E60 /* NSString+ActiveSupportInflector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+ActiveSupportInflector.h"; sourceTree = "<group>"; };
+		FDF6700F17830964009A2E60 /* NSString+ActiveSupportInflector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+ActiveSupportInflector.m"; sourceTree = "<group>"; };
+		FDF670331783098E009A2E60 /* FMDatabase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		FDF670341783098E009A2E60 /* FMDatabase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		FDF670351783098E009A2E60 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		FDF670361783098E009A2E60 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		FDF670371783098E009A2E60 /* FMDatabasePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		FDF670381783098E009A2E60 /* FMDatabasePool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		FDF670391783098E009A2E60 /* FMDatabaseQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		FDF6703A1783098E009A2E60 /* FMDatabaseQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		FDF6703C1783098E009A2E60 /* FMResultSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		FDF6703D1783098E009A2E60 /* FMResultSet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+		FDF6704517830A22009A2E60 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		FDF6704817830A3A009A2E60 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FDF66F68178307D3009A2E60 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FDF6704717830A2A009A2E60 /* libsqlite3.0.dylib in Frameworks */,
+				FDF66F6F178307D3009A2E60 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FDF66F78178307D3009A2E60 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FDF6704917830A3A009A2E60 /* SenTestingKit.framework in Frameworks */,
+				FDF6704617830A22009A2E60 /* libsqlite3.0.dylib in Frameworks */,
+				FDF66F7D178307D3009A2E60 /* XCTest.framework in Frameworks */,
+				FDF66F83178307D3009A2E60 /* libActiveRecordOnJails.a in Frameworks */,
+				FDF66F80178307D3009A2E60 /* UIKit.framework in Frameworks */,
+				FDF66F7E178307D3009A2E60 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FDF66F62178307D3009A2E60 = {
+			isa = PBXGroup;
+			children = (
+				FDF670321783098E009A2E60 /* fmdb */,
+				FDF6700717830964009A2E60 /* ActiveSupportInflector */,
+				FDF66F70178307D3009A2E60 /* ActiveRecordOnJails */,
+				FDF66F84178307D3009A2E60 /* ActiveRecordOnJailsTests */,
+				FDF66F6D178307D3009A2E60 /* Frameworks */,
+				FDF66F6C178307D3009A2E60 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FDF66F6C178307D3009A2E60 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FDF66F6B178307D3009A2E60 /* libActiveRecordOnJails.a */,
+				FDF66F7B178307D3009A2E60 /* ActiveRecordOnJailsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FDF66F6D178307D3009A2E60 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FDF6704817830A3A009A2E60 /* SenTestingKit.framework */,
+				FDF6704517830A22009A2E60 /* libsqlite3.0.dylib */,
+				FDF66F6E178307D3009A2E60 /* Foundation.framework */,
+				FDF66F7C178307D3009A2E60 /* XCTest.framework */,
+				FDF66F7F178307D3009A2E60 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FDF66F70178307D3009A2E60 /* ActiveRecordOnJails */ = {
+			isa = PBXGroup;
+			children = (
+				FDF66F9417830841009A2E60 /* ARJAcceptanceValidator.h */,
+				FDF66F9517830841009A2E60 /* ARJAcceptanceValidator.m */,
+				FDF66F9617830841009A2E60 /* ARJActiveRecord.h */,
+				FDF66F9717830841009A2E60 /* ARJActiveRecord.m */,
+				FDF66F9817830841009A2E60 /* ARJActiveRecordHelper.h */,
+				FDF66F9917830841009A2E60 /* ARJActiveRecordHelper.m */,
+				FDF66F9A17830841009A2E60 /* ARJAssociationValidator.h */,
+				FDF66F9B17830841009A2E60 /* ARJAssociationValidator.m */,
+				FDF66F9C17830841009A2E60 /* ARJBelongsToRelation.h */,
+				FDF66F9D17830841009A2E60 /* ARJBelongsToRelation.m */,
+				FDF66F9E17830841009A2E60 /* ARJBlobAttribute.h */,
+				FDF66F9F17830841009A2E60 /* ARJBlobAttribute.m */,
+				FDF66FA017830841009A2E60 /* ARJCustomValidator.h */,
+				FDF66FA117830841009A2E60 /* ARJCustomValidator.m */,
+				FDF66FA217830841009A2E60 /* ARJDatabaseManager.h */,
+				FDF66FA317830841009A2E60 /* ARJDatabaseManager.m */,
+				FDF66FA417830841009A2E60 /* ARJDateTimeAttribute.h */,
+				FDF66FA517830841009A2E60 /* ARJDateTimeAttribute.m */,
+				FDF66FA617830841009A2E60 /* ARJExpectationHelper.h */,
+				FDF66FA717830841009A2E60 /* ARJExpectationHelper.m */,
+				FDF66FA817830841009A2E60 /* ARJFloatAttribute.h */,
+				FDF66FA917830841009A2E60 /* ARJFloatAttribute.m */,
+				FDF66FAA17830841009A2E60 /* ARJFormatValidator.h */,
+				FDF66FAB17830841009A2E60 /* ARJFormatValidator.m */,
+				FDF66FAC17830841009A2E60 /* ARJHasManyRelation.h */,
+				FDF66FAD17830841009A2E60 /* ARJHasManyRelation.m */,
+				FDF66FAE17830841009A2E60 /* ARJHasOneRelation.h */,
+				FDF66FAF17830841009A2E60 /* ARJHasOneRelation.m */,
+				FDF66FB017830841009A2E60 /* ARJIntegerAttribute.h */,
+				FDF66FB117830841009A2E60 /* ARJIntegerAttribute.m */,
+				FDF66FB217830841009A2E60 /* ARJLengthValidator.h */,
+				FDF66FB317830841009A2E60 /* ARJLengthValidator.m */,
+				FDF66FB417830841009A2E60 /* ARJModelAttribute.h */,
+				FDF66FB517830841009A2E60 /* ARJModelAttribute.m */,
+				FDF66FB617830841009A2E60 /* ARJModelValidator.h */,
+				FDF66FB717830841009A2E60 /* ARJModelValidator.m */,
+				FDF66FB817830841009A2E60 /* ARJNumericalityValidator.h */,
+				FDF66FB917830841009A2E60 /* ARJNumericalityValidator.m */,
+				FDF66FBA17830841009A2E60 /* ARJPresenceValidator.h */,
+				FDF66FBB17830841009A2E60 /* ARJPresenceValidator.m */,
+				FDF66FBC17830841009A2E60 /* ARJPropertyObserver.h */,
+				FDF66FBD17830841009A2E60 /* ARJPropertyObserver.m */,
+				FDF66FBE17830841009A2E60 /* ARJRelation.h */,
+				FDF66FBF17830841009A2E60 /* ARJRelation.m */,
+				FDF66FC017830841009A2E60 /* ARJScope.h */,
+				FDF66FC117830841009A2E60 /* ARJScope.m */,
+				FDF66FC217830841009A2E60 /* ARJSQLDeleteInvocation.h */,
+				FDF66FC317830841009A2E60 /* ARJSQLDeleteInvocation.m */,
+				FDF66FC417830841009A2E60 /* ARJSQLInsertInvocation.h */,
+				FDF66FC517830841009A2E60 /* ARJSQLInsertInvocation.m */,
+				FDF66FC617830841009A2E60 /* ARJSQLInvocation.h */,
+				FDF66FC717830841009A2E60 /* ARJSQLInvocation.m */,
+				FDF66FC817830841009A2E60 /* ARJSQLSelectInvocation.h */,
+				FDF66FC917830841009A2E60 /* ARJSQLSelectInvocation.m */,
+				FDF66FCA17830841009A2E60 /* ARJSQLUpdateInvocation.h */,
+				FDF66FCB17830841009A2E60 /* ARJSQLUpdateInvocation.m */,
+				FDF66FCC17830841009A2E60 /* ARJStringAttribute.h */,
+				FDF66FCD17830841009A2E60 /* ARJStringAttribute.m */,
+				FDF66FCE17830841009A2E60 /* ARJUniquenessValidator.h */,
+				FDF66FCF17830841009A2E60 /* ARJUniquenessValidator.m */,
+				FDF66FD017830841009A2E60 /* ARJValidationErrors.h */,
+				FDF66FD117830841009A2E60 /* ARJValidationErrors.m */,
+				FDF66F73178307D3009A2E60 /* ActiveRecordOnJails.h */,
+				FDF66F75178307D3009A2E60 /* ActiveRecordOnJails.m */,
+				FDF66F71178307D3009A2E60 /* Supporting Files */,
+			);
+			path = ActiveRecordOnJails;
+			sourceTree = "<group>";
+		};
+		FDF66F71178307D3009A2E60 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FDF66F72178307D3009A2E60 /* ActiveRecordOnJails-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FDF66F84178307D3009A2E60 /* ActiveRecordOnJailsTests */ = {
+			isa = PBXGroup;
+			children = (
+				FDF66FD217830856009A2E60 /* ARJActiveRecordInternalTests.h */,
+				FDF66FD317830856009A2E60 /* ARJActiveRecordInternalTests.m */,
+				FDF66FD417830856009A2E60 /* ARJActiveRecordMultipleDatabaseTests.h */,
+				FDF66FD517830856009A2E60 /* ARJActiveRecordMultipleDatabaseTests.m */,
+				FDF66FD617830856009A2E60 /* ARJActiveRecordTests.h */,
+				FDF66FD717830856009A2E60 /* ARJActiveRecordTests.m */,
+				FDF66FD817830856009A2E60 /* ARJValidationTests.h */,
+				FDF66FD917830856009A2E60 /* ARJValidationTests.m */,
+				FDF66FDA17830856009A2E60 /* ExpectationHelperTests.h */,
+				FDF66FDB17830856009A2E60 /* ExpectationHelperTests.m */,
+				FDF66FDC17830856009A2E60 /* SPTestOrganization.h */,
+				FDF66FDD17830856009A2E60 /* SPTestOrganization.m */,
+				FDF66FDE17830856009A2E60 /* SPTestUser.h */,
+				FDF66FDF17830856009A2E60 /* SPTestUser.m */,
+				FDF66F8A178307D3009A2E60 /* ActiveRecordOnJailsTests.m */,
+				FDF66F85178307D3009A2E60 /* Supporting Files */,
+			);
+			path = ActiveRecordOnJailsTests;
+			sourceTree = "<group>";
+		};
+		FDF66F85178307D3009A2E60 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FDF66F86178307D3009A2E60 /* ActiveRecordOnJailsTests-Info.plist */,
+				FDF66F87178307D3009A2E60 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FDF6700717830964009A2E60 /* ActiveSupportInflector */ = {
+			isa = PBXGroup;
+			children = (
+				FDF6700817830964009A2E60 /* ActiveSupportInflector.h */,
+				FDF6700917830964009A2E60 /* ActiveSupportInflector.m */,
+				FDF6700A17830964009A2E60 /* ActiveSupportInflector.plist */,
+				FDF6700E17830964009A2E60 /* NSString+ActiveSupportInflector.h */,
+				FDF6700F17830964009A2E60 /* NSString+ActiveSupportInflector.m */,
+			);
+			path = ActiveSupportInflector;
+			sourceTree = "<group>";
+		};
+		FDF670321783098E009A2E60 /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				FDF670331783098E009A2E60 /* FMDatabase.h */,
+				FDF670341783098E009A2E60 /* FMDatabase.m */,
+				FDF670351783098E009A2E60 /* FMDatabaseAdditions.h */,
+				FDF670361783098E009A2E60 /* FMDatabaseAdditions.m */,
+				FDF670371783098E009A2E60 /* FMDatabasePool.h */,
+				FDF670381783098E009A2E60 /* FMDatabasePool.m */,
+				FDF670391783098E009A2E60 /* FMDatabaseQueue.h */,
+				FDF6703A1783098E009A2E60 /* FMDatabaseQueue.m */,
+				FDF6703C1783098E009A2E60 /* FMResultSet.h */,
+				FDF6703D1783098E009A2E60 /* FMResultSet.m */,
+			);
+			name = fmdb;
+			path = fmdb/src;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FDF66F6A178307D3009A2E60 /* ActiveRecordOnJails */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FDF66F8E178307D3009A2E60 /* Build configuration list for PBXNativeTarget "ActiveRecordOnJails" */;
+			buildPhases = (
+				FDF66F67178307D3009A2E60 /* Sources */,
+				FDF66F68178307D3009A2E60 /* Frameworks */,
+				FDF66F69178307D3009A2E60 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ActiveRecordOnJails;
+			productName = ActiveRecordOnJails;
+			productReference = FDF66F6B178307D3009A2E60 /* libActiveRecordOnJails.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		FDF66F7A178307D3009A2E60 /* ActiveRecordOnJailsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FDF66F91178307D3009A2E60 /* Build configuration list for PBXNativeTarget "ActiveRecordOnJailsTests" */;
+			buildPhases = (
+				FDF66F77178307D3009A2E60 /* Sources */,
+				FDF66F78178307D3009A2E60 /* Frameworks */,
+				FDF66F79178307D3009A2E60 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FDF66F82178307D3009A2E60 /* PBXTargetDependency */,
+			);
+			name = ActiveRecordOnJailsTests;
+			productName = ActiveRecordOnJailsTests;
+			productReference = FDF66F7B178307D3009A2E60 /* ActiveRecordOnJailsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FDF66F63178307D3009A2E60 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = 7woods;
+			};
+			buildConfigurationList = FDF66F66178307D3009A2E60 /* Build configuration list for PBXProject "ActiveRecordOnJails" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FDF66F62178307D3009A2E60;
+			productRefGroup = FDF66F6C178307D3009A2E60 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FDF66F6A178307D3009A2E60 /* ActiveRecordOnJails */,
+				FDF66F7A178307D3009A2E60 /* ActiveRecordOnJailsTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FDF66F79178307D3009A2E60 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FDF66F89178307D3009A2E60 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FDF66F67178307D3009A2E60 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FDF66F76178307D3009A2E60 /* ActiveRecordOnJails.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FDF66F77178307D3009A2E60 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FDF6703E178309A5009A2E60 /* FMDatabase.m in Sources */,
+				FDF6703F178309A5009A2E60 /* FMDatabaseAdditions.m in Sources */,
+				FDF67040178309A5009A2E60 /* FMDatabasePool.m in Sources */,
+				FDF67041178309A5009A2E60 /* FMDatabaseQueue.m in Sources */,
+				FDF67042178309A5009A2E60 /* FMResultSet.m in Sources */,
+				FDF67043178309A5009A2E60 /* ActiveSupportInflector.m in Sources */,
+				FDF67044178309A5009A2E60 /* NSString+ActiveSupportInflector.m in Sources */,
+				FDF67000178308D4009A2E60 /* ARJActiveRecordInternalTests.m in Sources */,
+				FDF67001178308D4009A2E60 /* ARJActiveRecordMultipleDatabaseTests.m in Sources */,
+				FDF67002178308D4009A2E60 /* ARJActiveRecordTests.m in Sources */,
+				FDF67003178308D4009A2E60 /* ARJValidationTests.m in Sources */,
+				FDF67004178308D4009A2E60 /* ExpectationHelperTests.m in Sources */,
+				FDF67005178308D4009A2E60 /* SPTestOrganization.m in Sources */,
+				FDF67006178308D4009A2E60 /* SPTestUser.m in Sources */,
+				FDF66FE0178308CA009A2E60 /* ARJAcceptanceValidator.m in Sources */,
+				FDF66FE1178308CA009A2E60 /* ARJActiveRecord.m in Sources */,
+				FDF66FE2178308CA009A2E60 /* ARJActiveRecordHelper.m in Sources */,
+				FDF66FE3178308CA009A2E60 /* ARJAssociationValidator.m in Sources */,
+				FDF66FE4178308CA009A2E60 /* ARJBelongsToRelation.m in Sources */,
+				FDF66FE5178308CA009A2E60 /* ARJBlobAttribute.m in Sources */,
+				FDF66FE6178308CA009A2E60 /* ARJCustomValidator.m in Sources */,
+				FDF66FE7178308CA009A2E60 /* ARJDatabaseManager.m in Sources */,
+				FDF66FE8178308CA009A2E60 /* ARJDateTimeAttribute.m in Sources */,
+				FDF66FE9178308CA009A2E60 /* ARJExpectationHelper.m in Sources */,
+				FDF66FEA178308CA009A2E60 /* ARJFloatAttribute.m in Sources */,
+				FDF66FEB178308CA009A2E60 /* ARJFormatValidator.m in Sources */,
+				FDF66FEC178308CA009A2E60 /* ARJHasManyRelation.m in Sources */,
+				FDF66FED178308CA009A2E60 /* ARJHasOneRelation.m in Sources */,
+				FDF66FEE178308CA009A2E60 /* ARJIntegerAttribute.m in Sources */,
+				FDF66FEF178308CA009A2E60 /* ARJLengthValidator.m in Sources */,
+				FDF66FF0178308CA009A2E60 /* ARJModelAttribute.m in Sources */,
+				FDF66FF1178308CA009A2E60 /* ARJModelValidator.m in Sources */,
+				FDF66FF2178308CA009A2E60 /* ARJNumericalityValidator.m in Sources */,
+				FDF66FF3178308CA009A2E60 /* ARJPresenceValidator.m in Sources */,
+				FDF66FF4178308CA009A2E60 /* ARJPropertyObserver.m in Sources */,
+				FDF66FF5178308CA009A2E60 /* ARJRelation.m in Sources */,
+				FDF66FF6178308CA009A2E60 /* ARJScope.m in Sources */,
+				FDF66FF7178308CA009A2E60 /* ARJSQLDeleteInvocation.m in Sources */,
+				FDF66FF8178308CA009A2E60 /* ARJSQLInsertInvocation.m in Sources */,
+				FDF66FF9178308CA009A2E60 /* ARJSQLInvocation.m in Sources */,
+				FDF66FFA178308CA009A2E60 /* ARJSQLSelectInvocation.m in Sources */,
+				FDF66FFB178308CA009A2E60 /* ARJSQLUpdateInvocation.m in Sources */,
+				FDF66FFC178308CA009A2E60 /* ARJStringAttribute.m in Sources */,
+				FDF66FFD178308CA009A2E60 /* ARJUniquenessValidator.m in Sources */,
+				FDF66FFE178308CA009A2E60 /* ARJValidationErrors.m in Sources */,
+				FDF66FFF178308CA009A2E60 /* ActiveRecordOnJails.m in Sources */,
+				FDF66F8B178307D3009A2E60 /* ActiveRecordOnJailsTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FDF66F82178307D3009A2E60 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FDF66F6A178307D3009A2E60 /* ActiveRecordOnJails */;
+			targetProxy = FDF66F81178307D3009A2E60 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		FDF66F87178307D3009A2E60 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FDF66F88178307D3009A2E60 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FDF66F8C178307D3009A2E60 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		FDF66F8D178307D3009A2E60 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FDF66F8F178307D3009A2E60 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/ActiveRecordOnJails.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ActiveRecordOnJails/ActiveRecordOnJails-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		FDF66F90178307D3009A2E60 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/ActiveRecordOnJails.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ActiveRecordOnJails/ActiveRecordOnJails-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		FDF66F92178307D3009A2E60 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Xcode5-DP2.app/Contents/Developer/Library/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ActiveRecordOnJails/ActiveRecordOnJails-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "ActiveRecordOnJailsTests/ActiveRecordOnJailsTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		FDF66F93178307D3009A2E60 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Xcode5-DP2.app/Contents/Developer/Library/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ActiveRecordOnJails/ActiveRecordOnJails-Prefix.pch";
+				INFOPLIST_FILE = "ActiveRecordOnJailsTests/ActiveRecordOnJailsTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FDF66F66178307D3009A2E60 /* Build configuration list for PBXProject "ActiveRecordOnJails" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FDF66F8C178307D3009A2E60 /* Debug */,
+				FDF66F8D178307D3009A2E60 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FDF66F8E178307D3009A2E60 /* Build configuration list for PBXNativeTarget "ActiveRecordOnJails" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FDF66F8F178307D3009A2E60 /* Debug */,
+				FDF66F90178307D3009A2E60 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		FDF66F91178307D3009A2E60 /* Build configuration list for PBXNativeTarget "ActiveRecordOnJailsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FDF66F92178307D3009A2E60 /* Debug */,
+				FDF66F93178307D3009A2E60 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FDF66F63178307D3009A2E60 /* Project object */;
+}
