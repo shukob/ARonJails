@@ -14,6 +14,16 @@ features
 2. Automatic migration.
 3. Validations and errors.
 
+dependency
+---------
+1. FMDB[https://github.com/ccgus/fmdb]
+2. ActiveSupportInflector[https://github.com/tomafro/ActiveSupportInflector]
+
+
+installation
+---------
+Just include sources in your project, as well as dependencies.
+
 
 examples
 -----------
