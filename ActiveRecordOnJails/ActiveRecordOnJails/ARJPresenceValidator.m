@@ -11,7 +11,7 @@
 @implementation ARJPresenceValidator
 
 -(NSArray*)validateValue:(id)value{
-    if (CMIsNil(value)) {
+    if (arj_nil(value)) {
         return @[@"Presence Error"];
     }else{
         return nil;
