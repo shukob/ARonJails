@@ -1,6 +1,6 @@
 //
 //  ARJHasManyRelation.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/21.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -11,11 +11,11 @@
 #import "ARJDatabaseManager.h"
 @implementation ARJHasManyRelation
 -(BOOL)willDestroySourceInstance:(ARJActiveRecord*)instance{
-    return [self willDestroySourceInstance:instance inDatabaseManager:[ARJDatabaseManager forRecord:instance]];
+    return [self willDestroySourceInstance:instance inDatabaseManager:instance.correspondingDatabaseManager];
 }
 
 -(BOOL)willDestroySourceInstance:(ARJActiveRecord *)instance inDatabaseManager:(ARJDatabaseManager *)manager{
-    return [manager runInTransaction:^BOOL{
+    return [manager runInTransaction:^BOOL(id database){
         for (ARJActiveRecord * record in [instance associatedForKey:self.relationName]){
             if (self.dependency == ARJRelationDependencyNullify) {
                 if(![record update:@{self.foreignKey: [NSNull null]}]){
@@ -40,7 +40,7 @@
 }
 
 -(BOOL)setDestinationInstance:(id)destination toSourceInstance:(id)source inDatabaseManager:(ARJDatabaseManager *)manager{
-    return [manager runInTransaction:^BOOL{
+    return [manager runInTransaction:^BOOL(id database){
         if (![source Id]) {
             if(![source saveInDatabaseManager:manager]){
                 return NO;

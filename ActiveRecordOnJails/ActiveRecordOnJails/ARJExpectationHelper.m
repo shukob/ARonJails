@@ -1,6 +1,6 @@
 //
 //  ARJExpectationHelper.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by ; on 2013/06/03.
 //  Copyright (c) 2013年 skonb. All rights reserved.

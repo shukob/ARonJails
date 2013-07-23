@@ -1,6 +1,6 @@
 //
 //  ARJActiveRecordHelper.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/03.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -40,6 +40,7 @@ NSString * const ARJAssociationKeySpecifier = @"association_key";
 NSString * const ARJDependencySpecifier = @"dependent";
 NSString * const ARJInverseRelationSpecifier = @"inverse_of";
 NSString * const ARJAutoSaveSpecifier = @"autosave";
+NSString * const ARJThroughSpecifier = @"through";
 
 NSString * const ARJValidationTypeSpecifier = @"validation_type";
 NSString * const ARJValidationTargetSpecifier = @"validation_target";
@@ -70,6 +71,24 @@ NSString * const ARJValidationFunctionSpecifier = @"selector";
 NSString * const ARJValidationTimingOnCraete = @"create";
 NSString * const ARJValidationTimingOnUpdate = @"update";
 NSString * const ARJValidationBaseTargetSpecifier = @"__base__";
+
+NSString * const ARJScopeNameSpecifier = @"name";
+NSString * const ARJScopeFactorySpecifier = @"factory";
+
+NSString * const ARJCallbackTimingBeforeCreate = @"before_create";
+NSString * const ARJCallbackTimingAfterCreate = @"after_create";
+NSString * const ARJCallbackTimingBeforeValidation = @"before_validation";
+NSString * const ARJCallbackTimingAfterValidation = @"after_validation";
+NSString * const ARJCallbackTimingBeforeSave = @"before_save";
+NSString * const ARJCallbackTimingAfterSave = @"after_save";
+NSString * const ARJCallbackTimingBeforeDestroy = @"before_destroy";
+NSString * const ARJCallbackTimingAfterDestroy = @"after_destroy";
+NSString * const ARJCallbackTimingAfterCommit = @"after_commit";
+NSString * const ARJCallbackTimingAfterInitialize = @"after_initialize";
+
+NSString * const ARJCallbackTimingSpecifier = @"callback_at";
+NSString * const ARJCallbackFunctionSpecifier = @"callback_function";
+
 
 @interface ARJActiveRecordHelper()
 @property (nonatomic, strong) NSRegularExpression *valuePlaceholderRegex;

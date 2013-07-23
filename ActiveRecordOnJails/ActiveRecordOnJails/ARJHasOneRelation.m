@@ -1,6 +1,6 @@
 //
 //  ARJHasOneRelation.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/21.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -15,7 +15,7 @@
 }
 
 -(BOOL)willDestroySourceInstance:(ARJActiveRecord *)instance inDatabaseManager:(ARJDatabaseManager *)manager{
-    return [manager runInTransaction:^BOOL{
+    return [manager runInTransaction:^BOOL(id database){
         ARJActiveRecord *record = [instance associatedForKey:self.relationName];
         if (self.dependency == ARJRelationDependencyNullify) {
             if(![record update:@{self.foreignKey: [NSNull null]}]){
@@ -40,7 +40,7 @@
 }
 
 -(BOOL)setDestinationInstance:(id)destination toSourceInstance:(id)source inDatabaseManager:(ARJDatabaseManager *)manager{
-    return [manager runInTransaction:^BOOL{
+    return [manager runInTransaction:^BOOL(id database){
         if (![source Id]) {
             if(![source save]){
                 return NO;

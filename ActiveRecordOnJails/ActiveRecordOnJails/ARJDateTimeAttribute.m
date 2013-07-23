@@ -1,6 +1,6 @@
 //
 //  ARJDateTimeAttribute.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/22.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -14,13 +14,18 @@
 }
 
 -(id)valueForInstance:(ARJActiveRecord *)instance{
-    NSTimeInterval serial = [[instance latestValueForKey:self.columnName]integerValue];
-    return [NSDate dateWithTimeIntervalSince1970:serial];
+    id val =[instance latestValueForKey:self.columnName];
+    if (arj_not_nil(val)){
+        NSTimeInterval serial = [val integerValue];
+        return [NSDate dateWithTimeIntervalSince1970:serial];
+    }else{
+        return [NSNull null];
+    }
 }
 
 -(void)setValue:(id)attribute forInstance:(ARJActiveRecord*)instance{
     NSTimeInterval serial = [attribute timeIntervalSince1970];
-    [super setValue:@(serial) forInstance:instance];
+    [super setValue:@((NSInteger)serial) forInstance:instance];
 }
 
 -(NSString*)defaultValueSpecifier{

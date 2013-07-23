@@ -1,6 +1,6 @@
 //
 //  ARJActiveRecord.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/03.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -13,6 +13,7 @@
 #import "NSString+ActiveSupportInflector.h"
 #import "ARJModelValidator.h"
 #import "ARJPropertyObserver.h"
+#import "ARJSQLInvocation.h"
 
 @interface ARJActiveRecord()
 @property (nonatomic, strong) NSMutableDictionary *relationCache;
@@ -30,6 +31,7 @@
         [[ARJPropertyObserver defaultObserver]registerForPropertyObservation:self];
         self.errors = [ARJValidationErrors new];
         self.correspondingDatabaseManager = [ARJDatabaseManager defaultManager];
+        [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingAfterInitialize];
     }
     return self;
 }
@@ -45,18 +47,41 @@
 +(NSString*)model{
     return @"";
 }
+
 +(NSDictionary*)attributes{
     ARJModelAttribute *idAttribute = [ARJModelAttribute modelAttributeWithDictionary:@{ARJAttributeTypeSpecifier : ARJIntegerAttributeSpecifier, ARJAttributeNameSpecifier : @"id"}];
-    return @{@"id" : idAttribute};
+    ARJModelAttribute *updatedAtAttribute =[ARJModelAttribute modelAttributeWithDictionary:@{ARJAttributeTypeSpecifier : ARJDateTimeAttributeSpecifier, ARJAttributeNameSpecifier : @"updated_at"}];
+    ARJModelAttribute *createdAtAttribute =[ARJModelAttribute modelAttributeWithDictionary:@{ARJAttributeTypeSpecifier : ARJDateTimeAttributeSpecifier, ARJAttributeNameSpecifier : @"created_at"}];
+    
+    return @{@"id" : idAttribute, @"updated_at": updatedAtAttribute, @"created_at" : createdAtAttribute};
 }
 +(NSDictionary*)relations{
     return @{};
 }
+
+
++(NSDictionary*)attributesWithRelationalKeys{
+    NSDictionary *attributes = [self attributes];
+    NSDictionary *relations = [self relations];
+    NSMutableDictionary *targetAttributes = [NSMutableDictionary dictionaryWithDictionary:attributes];
+    for (ARJRelation *relation in relations.allValues){
+        NSDictionary *thisAttributes = [relation attributes];
+        if (thisAttributes) {
+            [targetAttributes addEntriesFromDictionary:thisAttributes];
+        }
+    }
+    return targetAttributes;
+}
+
++(NSDictionary*)callbacks{
+    return @{ARJCallbackTimingBeforeValidation : @[@"setUpDefaults:"]};
+}
+
 +(NSDictionary*)validations{
     return @{};
 }
-+(NSArray*)scopes{
-    return @[];
++(NSDictionary*)scopes{
+    return @{};
 }
 
 +(id)find:(NSDictionary*)condition{
@@ -98,7 +123,7 @@
     if (!manager) {
         manager = [ARJDatabaseManager defaultManager];
     }
-     return [manager findFirstModel:self condition:condition];
+    return [manager findFirstModel:self condition:condition];
 }
 +(NSArray*)findAllInDatabaseManager:(ARJDatabaseManager*)manager{
     if (!manager) {
@@ -118,30 +143,67 @@
     if (!manager){
         manager = [ARJDatabaseManager defaultManager];
     }
-    return [manager destroyInstance:self];
+    if(![self willDestroy]){
+        return NO;
+    }
+    BOOL res = [manager destroyInstance:self];
+    if (res) {
+        if (![self didDestroy]) {
+            return NO;
+        }
+    }
+    return res;
 }
 
 -(BOOL)saveInDatabaseManager:(ARJDatabaseManager*)manager{
     self.saving = YES;
     BOOL res = NO;
     if (self.Id) {
+        if(![self willValidate]){
+            return NO;
+        }
         if ([self validateOnTiming:ARJModelValidatorValidationTimingOnUpdate]) {
-            [self willSave];
+            if (![self didValidate]) {
+                return NO;
+            }
+            if(![self willSave]){
+                return NO;
+            };
             res = [self.correspondingDatabaseManager saveInstance:self];
+            if (![self didSave]) {
+                return NO;
+            }
         }else{
             res = NO;
         }
     }else{
+        if (![self willValidate]) {
+            return NO;
+        }
         if ([self validateOnTiming:ARJModelValidatorValidationTimingOnCreate]) {
-            [self willCreate];
+            if (![self didValidate]) {
+                return NO;
+            }
+            if (![self willSave]) {
+                return NO;
+            }
+            if(![self willCreate]){
+                return NO;
+            }
             ARJActiveRecord* instance = [[self class]create:self._updateDictionary inDatabaseManager:manager];
+            self._columnDictionary = instance._columnDictionary;
+            if (![self didCreate]) {
+                return NO;
+            }
+            if (![self didSave]) {
+                return NO;
+            }
             if (instance) {
                 self.Id = instance.Id;
                 res = [self saveAssociated];
             }else{
                 res =  NO;
             }
-            
         }else{
             res =  NO;
         }
@@ -153,11 +215,26 @@
     for (NSString *key in attributes.allKeys){
         [self setAttribute:attributes[key] forKey:key];
     }
+    if (![self willValidate]) {
+        return self;
+    }
     if ([self validateOnTiming:ARJModelValidatorValidationTimingOnUpdate]) {
+        if (![self didValidate]) {
+            return self;
+        }
+        if(![self willSave]){
+            return self;
+        };
         if (!manager) {
             manager = [ARJDatabaseManager defaultManager];
         }
-        return [manager updateInstance:self attributes:attributes];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:attributes];
+        [dict setObject:[self attributeForKey:@"updated_at"] forKey:@"updated_at"];
+        id res = [manager updateInstance:self attributes:dict];
+        if (![res didSave]) {
+            return res;
+        }
+        return res;
     }else{
         return self;
     }
@@ -166,11 +243,30 @@
 +(id)create:(NSDictionary*)attributes inDatabaseManager:(ARJDatabaseManager*)manager{
     ARJActiveRecord * tempInstance = [self new];
     [tempInstance._updateDictionary addEntriesFromDictionary:attributes];
+    if(![tempInstance willValidate]){
+        return tempInstance;
+    }
     if ([tempInstance validateOnTiming:ARJModelValidatorValidationTimingOnCreate]) {
+        if(![tempInstance didValidate]){
+            return tempInstance;
+        }
+        if(![tempInstance willSave]){
+            return tempInstance;
+        }
+        if(![tempInstance willCreate]){
+            return tempInstance;
+        }
         if (!manager) {
             manager = [ARJDatabaseManager defaultManager];
         }
-        return [manager createModel:self attributes:attributes];
+        id res = [manager createModel:self attributes:tempInstance._updateDictionary];
+        if(![res didCreate]){
+            return res;
+        }
+        if(![res didSave]){
+            return res;
+        }
+        return res;
     }else{
         return tempInstance;
     }
@@ -197,13 +293,16 @@
 }
 
 -(id)attributeForKey:(NSString *)key{
-    
-    return [[[self class]attributes][key]valueForInstance:self];
+    id res = [[[self class]attributesWithRelationalKeys][key]valueForInstance:self];
+    if (arj_nil(res)) {
+        res = nil;
+    }
+    return res;
 }
 
 -(void)setAttribute:(id)attribute forKey:(NSString *)key{
-    if ([[self class]attributes][key]) {
-        [[[self class]attributes][key]setValue:attribute forInstance:self];
+    if ([[self class]attributesWithRelationalKeys][key]) {
+        [[[self class]attributesWithRelationalKeys][key]setValue:attribute forInstance:self];
     }else{
         self._updateDictionary[key]=attribute;
     }
@@ -257,47 +356,111 @@
 
 
 -(BOOL)willDestroy{
-    NSDictionary * relations = [[self class]relations];
-    if(relations.count){
-        return [[ARJDatabaseManager defaultManager]runInTransaction:^BOOL{
-            BOOL res = YES;
-            for (ARJRelation *relation in [relations allValues]){
-                res = [relation willDestroySourceInstance:self inDatabaseManager:self.correspondingDatabaseManager];
-                if (!res) {
-                    break;
-                }
-            }
-            return res;
-        }];
+    BOOL callbackResult = [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingBeforeDestroy];
+    if (!callbackResult) {
+        return NO;
     }else{
-        return YES;
+        NSDictionary * relations = [[self class]relations];
+        if(relations.count){
+            return [[ARJDatabaseManager defaultManager]runInTransaction:^BOOL(id database){
+                BOOL res = YES;
+                for (ARJRelation *relation in [relations allValues]){
+                    res = [relation willDestroySourceInstance:self inDatabaseManager:self.correspondingDatabaseManager];
+                    if (!res) {
+                        break;
+                    }
+                }
+                return res;
+            }];
+        }else{
+            return YES;
+        }
     }
     
 }
 
 -(BOOL)didDestroy{
-    return YES;
+    return [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingAfterDestroy];
 }
 -(BOOL)willSave{
-    BOOL valid = [self valid];
-    return valid;
+    NSDate *currentDate = [NSDate date];
+    if ([self Id]==0) {
+        [self setAttribute:currentDate forKey:@"created_at"];
+    }
+    [self setAttribute:currentDate forKey:@"updated_at"];
+    
+    return [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingBeforeSave];
 }
 -(BOOL)didSave{
-    return YES;
+    return [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingAfterSave];
 }
 -(BOOL)willCreate{
-    return YES;
+    return [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingBeforeCreate];
 }
 -(BOOL)didCreate{
-    return YES;
+    return [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingAfterCreate];;
+}
+
+-(BOOL)invokeCallbackOnTiming:(ARJActiveRecordCallbackTiming)timing{
+    NSString * key = nil;
+    switch (timing) {
+        case ARJActiveRecordCallbackTimingBeforeCreate:
+            key = ARJCallbackTimingBeforeCreate;
+            break;
+        case ARJActiveRecordCallbackTimingAfterCreate:
+            key = ARJCallbackTimingAfterCreate;
+            break;
+        case ARJActiveRecordCallbackTimingBeforeSave:
+            key = ARJCallbackTimingBeforeSave;
+            break;
+        case ARJActiveRecordCallbackTimingBeforeValidation:
+            key = ARJCallbackTimingBeforeValidation;
+            break;
+        case ARJActiveRecordCallbackTimingAfterCommit:
+            key = ARJCallbackTimingAfterCommit;
+            break;
+        case ARJActiveRecordCallbackTimingBeforeDestroy:
+            key = ARJCallbackTimingBeforeDestroy;
+            break;
+        case ARJActiveRecordCallbackTimingAfterDestroy:
+            key = ARJCallbackTimingAfterDestroy;
+            break;
+        case ARJActiveRecordCallbackTimingAfterSave:
+            key = ARJCallbackTimingAfterSave;
+            break;
+        case ARJActiveRecordCallbackTimingAfterValidation:
+            key = ARJCallbackTimingAfterValidation;
+            break;
+        case ARJActiveRecordCallbackTimingAfterInitialize:
+            key = ARJCallbackTimingAfterInitialize;
+        default:
+            break;
+            
+    }
+    NSDictionary *allCallbacks = [[self class]callbacks];
+    NSArray * callbacks = allCallbacks[key];
+    BOOL res = YES;
+    for (NSString *selectorString in callbacks){
+        SEL selector = NSSelectorFromString(selectorString);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        id callbackResultValue = [self performSelector:selector withObject:self];
+#pragma clang diagnostic pop
+        BOOL thisResult = [callbackResultValue boolValue];
+        res = thisResult;
+        if (!thisResult) {
+            break;
+        }
+    }
+    return res;
 }
 
 -(BOOL)willValidate{
-    return YES;
+    return  [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingBeforeValidation];
 }
 
 -(BOOL)didValidate{
-    return YES;
+    return  [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingAfterValidation];;
 }
 
 +(ARJRelation*)relationForKey:(NSString*)key{
@@ -376,6 +539,7 @@
         if (temp) {
             self._columnDictionary = temp._columnDictionary;
             [self._updateDictionary removeAllObjects];;
+            [self.relationCache removeAllObjects];
         }
     }
 }
@@ -407,6 +571,49 @@
         }
     }
     return self;
+}
+
++(id)findOrCreate:(NSDictionary *)conditions{
+    return [self findOrCreate:conditions inDatabaseManager:[ARJDatabaseManager defaultManager]];
+}
+
++(id)findOrCreate:(NSDictionary *)conditions inDatabaseManager:(ARJDatabaseManager *)manager{
+    id res = [self findFirst:conditions inDatabaseManager:manager];
+    if (!res) {
+        res = [self create:conditions inDatabaseManager:manager];
+    }
+    return res;
+}
+
+
++(id)executeScopeForKey:(NSString *)name withParams:(NSDictionary *)params{
+    return [self executeScopeForKey:name withParams:params inDatabaseManager:[ARJDatabaseManager defaultManager]];
+}
+
++(id)executeScopeForKey:(NSString *)name withParams:(NSDictionary *)params inDatabaseManager:(ARJDatabaseManager*)manager{
+    ARJScopeFactory *factory = [self scopes][name];
+    ARJScope * scope = [factory produce:params];
+    return [manager findModel:self invocation:scope.SQLInvocation];
+}
+
+
+-(id)setUpDefaults:(id)sender{
+    if(!self.Id){
+        NSDictionary *attributes = [[self class]attributes];
+        for (NSString *key in attributes.allKeys){
+            if ([attributes[key]defaultValue]) {
+                if (arj_nil([self attributeForKey:key])) {
+                    [self setAttribute:[attributes[key]defaultValue] forKey:key];
+                }
+            }
+        }
+    }
+    return @YES;
+}
+
+-(void)dealloc{
+    [[ARJPropertyObserver defaultObserver]unRegister:self];
+    
 }
 
 @end

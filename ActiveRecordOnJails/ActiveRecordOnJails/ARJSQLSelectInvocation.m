@@ -1,20 +1,22 @@
 //
 //  ARJSQLSelectInvocation.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/24.
 //  Copyright (c) 2013年 skonb. All rights reserved.
 //
 
 #import "ARJSQLSelectInvocation.h"
-#import "FMDatabase.h"
+#import "ARJDatabaseManager.h"
+
 @implementation ARJSQLSelectInvocation
 
--(id)invokeInDatabase:(id)database{
-    id res = nil;
-    if ([database isKindOfClass:[FMDatabase class]]) {
+-(id)invokeInDatabaseManager:(ARJDatabaseManager*)manager{
+    __block id res = nil;
+    [manager runInTransaction:^BOOL(id database){
         res = [database executeQuery:self.SQLString withArgumentsInArray:self.parameters];
-    }
+        return res != nil;
+    }];
     return res;
 }
 

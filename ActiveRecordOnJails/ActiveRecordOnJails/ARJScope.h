@@ -12,6 +12,7 @@ extern NSString * const ARJScopeSQLString;
 extern NSString * const ARJScopeSQLParameters;
 @class ARJSQLInvocation;
 @interface ARJScope : NSObject
+
 +(ARJScope*)INSERT;
 +(ARJScope*)SELECT;
 +(ARJScope*)UPDATE:(NSString*)tableName;

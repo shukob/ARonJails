@@ -1,6 +1,6 @@
 //
 //  ARJSQLInvocation.h
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/24.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ARJActiveRecordHelper.h"
 
+@class ARJDatabaseManager;
 typedef enum _ARJSQLInvocationType{
     ARJSQLInvocationTypeNone,
    ARJSQLInvocationTypeSelect,
@@ -28,5 +29,5 @@ extern NSString * ARJSQLInvocationTypeSpecifier;
 
 -(id)initWithDictionary:(NSDictionary*)dictionary;
 +(ARJSQLInvocation*)SQLInvocationWithDictionary:(NSDictionary*)dictionary;
--(id)invokeInDatabase:(id)database;
+-(id)invokeInDatabaseManager:(ARJDatabaseManager*)manager;
 @end

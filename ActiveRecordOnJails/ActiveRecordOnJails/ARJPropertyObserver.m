@@ -1,6 +1,6 @@
 //
 //  ARJPropertyObserver.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/17.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -50,5 +50,22 @@ static ARJPropertyObserver* ___instance;
         ___instance = [ARJPropertyObserver new];
     }
     return ___instance;
+}
+
+-(void)unRegister:(ARJActiveRecord *)modelInstance{
+    NSDictionary *attributes = [[modelInstance class]attributes];
+    for(NSString *attributeName in attributes.allKeys){
+        if ([attributeName isEqualToString:@"id"]) {
+            continue;
+        }
+        ARJModelAttribute *attribute = attributes[attributeName];
+        NSString *keyPath = attribute.propertyName;
+        [modelInstance removeObserver:self forKeyPath:keyPath];
+    }
+    NSDictionary *relations = [[modelInstance class]relations];
+    for (NSString * relationName in relations.allKeys){
+        NSString *keyPath = relationName;
+        [modelInstance removeObserver:self forKeyPath:keyPath];
+    }
 }
 @end

@@ -1,6 +1,6 @@
 //
 //  ARJRelation.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/17.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -56,7 +56,7 @@
         if (self.dictionary[ARJAssociationKeySpecifier]) {
             _associationKey = self.dictionary[ARJAssociationKeySpecifier];
         }else{
-            _associationKey = [[self.destinationModel tableName] stringByAppendingString:@"_id"];
+            _associationKey = [[[self.destinationModel tableName]singularizeString] stringByAppendingString:@"_id"];
         }
     }
     return _associationKey;
@@ -73,6 +73,10 @@
 -(BOOL)willDestroySourceInstance:(ARJActiveRecord*)instance{
     [self doesNotRecognizeSelector:@selector(willDestroySourceInstance:)];
     return NO;
+}
+
+-(BOOL)willDestroySourceInstance:(ARJActiveRecord *)instance inDatabaseManager:(ARJDatabaseManager *)manager{
+    return [self willDestroySourceInstance:instance];
 }
 
 -(NSDictionary*)attributes{

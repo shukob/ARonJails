@@ -1,6 +1,6 @@
 //
 //  ARJScope.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/04.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -9,6 +9,7 @@
 #import "ARJScope.h"
 #import "ARJActiveRecordHelper.h"
 #import "ARJSQLInvocation.h"
+
 NSString * const ARJScopeSQLString = @"ARJScopeSQLString";
 NSString * const ARJScopeSQLParameters = @"ARJScopeSQLParameters";
 
@@ -248,14 +249,15 @@ typedef enum _ARJScopeOperationType ARJScopeOperationType;
             }else if([param isKindOfClass:[NSDictionary class]]){
                 for(NSString *key in param){
                     NSString *thisKey = key;
+                    id value = param[key];
                     if (![[ARJActiveRecordHelper defaultHelper]hasTableSpecificationInString:thisKey]) {
                         thisKey = [[self.targetTable stringByAppendingString:@"."]stringByAppendingString:thisKey];
                     }
                     if (![[ARJActiveRecordHelper defaultHelper]hasValuePlaceholderInString:thisKey]) {
                         thisKey = [thisKey stringByAppendingString:@" = ?"];
                     }
+
                     [self.params[ARJScopeWhereClause]addObject:thisKey];
-                    id value = param[key];
                     if ([value isKindOfClass:[NSArray class]]) {
                         [self.params[ARJScopeWhereValues]addObjectsFromArray:value];
                     }else{
@@ -369,6 +371,12 @@ typedef enum _ARJScopeOperationType ARJScopeOperationType;
             break;
     }
     return invocationType;
+}
+
++(ARJScope*)withBlock:(void (^)(ARJScope *))block forModel:(__unsafe_unretained Class)model{
+    ARJScope * scope = [model SELECT];
+    block(scope);
+    return scope;
 }
 
 @end

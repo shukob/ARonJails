@@ -1,6 +1,6 @@
 //
 //  ARJModelValidator.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/24.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -82,7 +82,7 @@
 }
 
 -(BOOL)validateBlankValue:(id)value{
-    if (!value && [self.dictionary[ARJValidationAllowBlankSpecifier]boolValue]) {
+    if ([self.dictionary[ARJValidationAllowBlankSpecifier]boolValue] && arj_blank(value)) {
         return YES;
     }else{
         return NO;

@@ -1,6 +1,6 @@
 //
 //  ARJActiveRecord.h
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/03.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -12,8 +12,23 @@
 #import "ARJModelAttribute.h"
 #import "ARJValidationErrors.h"
 #import "ARJScope.h"
+#import "ARJScopeFactory.h"
 #import "ARJModelValidator.h"
 #import "ARJDatabaseManager.h"
+
+NS_ENUM(NSInteger, _ARJActiveRecordCallbackTiming){
+    ARJActiveRecordCallbackTimingBeforeCreate = 1,
+    ARJActiveRecordCallbackTimingAfterCreate,
+    ARJActiveRecordCallbackTimingBeforeValidation,
+    ARJActiveRecordCallbackTimingAfterValidation,
+    ARJActiveRecordCallbackTimingBeforeSave,
+    ARJActiveRecordCallbackTimingAfterSave,
+    ARJActiveRecordCallbackTimingBeforeDestroy,
+    ARJActiveRecordCallbackTimingAfterDestroy,
+    ARJActiveRecordCallbackTimingAfterCommit,
+    ARJActiveRecordCallbackTimingAfterInitialize,
+};
+typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 
 @interface ARJActiveRecord : NSObject
 @property (nonatomic, assign) NSInteger Id;
@@ -30,9 +45,10 @@
 +(NSString*)model;
 +(NSDictionary*)attributes;
 +(NSDictionary*)relations;
-
++(NSDictionary*)attributesWithRelationalKeys;
++(NSDictionary*)callbacks; //Callback function must have signature of -(id)blahblah:(id)sender
 +(NSDictionary*)validations;
-+(NSArray*)scopes;
++(NSDictionary*)scopes;
 +(NSString*)tableName;
 +(ARJRelation*)relationForKey:(NSString*)key;
 
@@ -46,6 +62,8 @@
 -(BOOL)save;
 -(id)update:(NSDictionary*)attributes;
 +(id)create:(NSDictionary*)attributes;
++(id)findOrCreate:(NSDictionary*)conditions;
++(id)executeScopeForKey:(NSString*)name withParams:(NSDictionary*)params;
 
 /* uses specific manager */
 +(id)find:(NSDictionary*)condition inDatabaseManager:(ARJDatabaseManager*)manager;
@@ -56,6 +74,9 @@
 -(BOOL)saveInDatabaseManager:(ARJDatabaseManager*)manager;
 -(id)update:(NSDictionary*)attributes inDatabaseManager:(ARJDatabaseManager*)manager;
 +(id)create:(NSDictionary*)attributes inDatabaseManager:(ARJDatabaseManager*)manager;
++(id)findOrCreate:(NSDictionary *)conditions inDatabaseManager:(ARJDatabaseManager*)manager;
++(id)executeScopeForKey:(NSString*)name withParams:(NSDictionary*)params inDatabaseManager:(ARJDatabaseManager*)manager;
+
 
 +(ARJScope*)scoped;
 +(ARJScope*)insertScope;
@@ -83,4 +104,8 @@
 -(BOOL)saveAssociated;
 
 -(void)reload;
+
+//Pre-defined callback function
+-(id)setUpDefaults:(id)sender;
+
 @end

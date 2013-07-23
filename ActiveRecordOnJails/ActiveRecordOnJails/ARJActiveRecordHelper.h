@@ -1,6 +1,6 @@
 //
 //  ARJActiveRecordHelper.h
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/03.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -38,6 +38,7 @@ extern NSString * const ARJAssociationKeySpecifier;
 extern NSString * const ARJDependencySpecifier;
 extern NSString * const ARJInverseRelationSpecifier;
 extern NSString * const ARJAutoSaveSpecifier;
+extern NSString * const ARJThroughSpecifier;
 
 extern NSString * const ARJValidationTypeSpecifier;
 extern NSString * const ARJValidationTargetSpecifier;
@@ -69,8 +70,49 @@ extern NSString * const ARJValidationTimingOnCraete;
 extern NSString * const ARJValidationTimingOnUpdate;
 extern NSString * const ARJValidationBaseTargetSpecifier;
 
+extern NSString * const ARJScopeNameSpecifier;
+extern NSString * const ARJScopeFactorySpecifier;
+
+extern NSString * const ARJCallbackTimingBeforeCreate;
+extern NSString * const ARJCallbackTimingAfterCreate;
+extern NSString * const ARJCallbackTimingBeforeValidation;
+extern NSString * const ARJCallbackTimingAfterValidation;
+extern NSString * const ARJCallbackTimingBeforeSave;
+extern NSString * const ARJCallbackTimingAfterSave;
+extern NSString * const ARJCallbackTimingBeforeDestroy;
+extern NSString * const ARJCallbackTimingAfterDestroy;
+extern NSString * const ARJCallbackTimingAfterCommit;
+extern NSString * const ARJCallbackTimingAfterInitialize;
+
+extern NSString * const ARJCallbackTimingSpecifier;
+extern NSString * const ARJCallbackFunctionSpecifier;
+
+#define arj_nil(target) (!(target) || (target) == [NSNull null])
+
+#define arj_not_nil(target) ((target) && (target) != [NSNull null])
+
+#define arj_blank(target) (arj_nil((target)) || ([(target) isKindOfClass:[NSString class]] && [(target) length]==0) || ([(target) isKindOfClass:[NSNumber class]] && [(target) integerValue]==0))
+
+#define arj_present(target) (arj_not_nil((target)) && (([(target) isKindOfClass:[NSString class]] && [(target) length]!=0) || ([(target) isKindOfClass:[NSNumber class]] && [(target) integerValue]!=0) || (![(target) isKindOfClass:[NSString class]] && ![(target) isKindOfClass:[NSNumber class]])))
 
 #define arj_model(name) +(NSString*)model{return @#name;}
+
+#define arj_attributes_with_relational_keys static NSMutableDictionary *__arj__attributes__with_relational__keys_cache;\
++(NSDictionary*)attributesWithRelationalKeys{\
+    if(!__arj__attributes__with_relational__keys_cache){\
+        NSDictionary *attributes = [self attributes];\
+        NSDictionary *relations = [self relations];\
+        NSMutableDictionary *targetAttributes = [NSMutableDictionary dictionaryWithDictionary:attributes];\
+        for (ARJRelation *relation in relations.allValues){\
+            NSDictionary *thisAttributes = [relation attributes];\
+            if (thisAttributes) {\
+                [targetAttributes addEntriesFromDictionary:thisAttributes];\
+            }\
+        }\
+        __arj__attributes__with_relational__keys_cache = targetAttributes;\
+    }\
+    return __arj__attributes__with_relational__keys_cache;\
+}
 
 #define arj_string(name, ...) @{ARJAttributeTypeSpecifier : ARJStringAttributeSpecifier, ARJAttributeNameSpecifier : @#name, __VA_ARGS__}
 #define arj_integer(name, ...) @{ARJAttributeTypeSpecifier : ARJIntegerAttributeSpecifier, ARJAttributeNameSpecifier : @#name,  __VA_ARGS__}
@@ -90,14 +132,15 @@ extern NSString * const ARJValidationBaseTargetSpecifier;
 #define arj_validates_numericality_of(property, ...) @{ARJValidationTypeSpecifier : ARJNumericalityValidationSpecifier, ARJValidationTargetSpecifier : @#property,   __VA_ARGS__}
 #define arj_validates_associated(relation, ...) @{ARJValidationTypeSpecifier : ARJAssociationValidationSpecifier, ARJValidationTargetSpecifier : @#relation,  __VA_ARGS__}
 
+#define arj_scope(name, block) @{ARJScopeNameSpecifier: @#name, ARJScopeFactorySpecifier: [ARJScopeFactory scopeFactoryWithBlock:(^(ARJScope* scope, NSDictionary *params)block) forModel:self]}
+
 #define arj_attributes(block, ...) static NSMutableDictionary *__arj__attributes__cache;\
 +(NSDictionary*)attributes{\
     if(!__arj__attributes__cache){\
-        __arj__attributes__cache = [NSMutableDictionary dictionary];\
+        __arj__attributes__cache = [NSMutableDictionary dictionaryWithDictionary:[ARJActiveRecord attributes]];\
         for(NSDictionary *dict in @[block,  __VA_ARGS__]){\
             __arj__attributes__cache[dict[ARJAttributeNameSpecifier]] = [ARJModelAttribute modelAttributeWithDictionary:dict];\
         }\
-        __arj__attributes__cache[@"id"]=[ARJModelAttribute modelAttributeWithDictionary:@{ARJAttributeTypeSpecifier : ARJIntegerAttributeSpecifier, ARJAttributeNameSpecifier : @"id"}];\
     }\
     return __arj__attributes__cache;\
 }
@@ -111,7 +154,8 @@ extern NSString * const ARJValidationBaseTargetSpecifier;
         }\
     }\
     return __arj__relations__cache;\
-}
+}\
+arj_attributes_with_relational_keys
 
 #define arj_validations(block, ...) static NSMutableDictionary* __arj__validations__cache;\
 +(NSDictionary*)validations{\
@@ -129,6 +173,50 @@ extern NSString * const ARJValidationBaseTargetSpecifier;
     return __arj__validations__cache;\
 }
             
+#define arj_scopes(block, ...) static NSMutableDictionary* __arj__scopes__cache;\
++(NSDictionary*)scopes{\
+    if(!__arj__scopes__cache){\
+        __arj__scopes__cache = [NSMutableDictionary dictionary];\
+        for(NSDictionary *dict in @[block, __VA_ARGS__]){\
+            __arj__scopes__cache[dict[ARJScopeNameSpecifier]]=dict[ARJScopeFactorySpecifier];\
+        }\
+    }\
+    return __arj__scopes__cache;\
+}\
+
+#define arj_before_create(function) @{ARJCallbackTimingSpecifier: ARJCallbackTimingBeforeCreate, ARJCallbackFunctionSpecifier: @#function}
+
+#define arj_after_create(function) @{ARJCallbackTimingSpecifier: ARJCallbackTimingAfterCreate, ARJCallbackFunctionSpecifier: @#function}
+
+#define arj_before_validation(function) @{ARJCallbackTimingSpecifier: ARJCallbackTimingBeforeValidation, ARJCallbackFunctionSpecifier: @#function}
+
+#define arj_after_validation(function) @{ARJCallbackTimingSpecifier: ARJCallbackTimingAfterValidation, ARJCallbackFunctionSpecifier: @#function}
+
+#define arj_before_save(function) @{ARJCallbackTimingSpecifier: ARJCallbackTimingBeforeSave, ARJCallbackFunctionSpecifier: @#function}
+
+#define arj_after_save(function) @{ARJCallbackTimingSpecifier: ARJCallbackTimingAfterSave, ARJCallbackFunctionSpecifier: @#function}
+
+#define arj_before_destroy(function) @{ARJCallbackTimingSpecifier: ARJCallbackTimingBeforeDestroy, ARJCallbackFunctionSpecifier: @#function}
+
+#define arj_after_destroy(function) @{ARJCallbackTimingSpecifier: ARJCallbackTimingAfterDestroy, ARJCallbackFunctionSpecifier: @#function}
+
+#define arj_after_comit(function) @{ARJCallbackTimingSpecifier: ARJCallbackTimingAfterCommit, ARJCallbackFunctionSpecifier: @#function}
+
+#define arj_after_initialize(function) @{ARJCallbackTimingSpecifier: ARJCallbackTimingAfterInitialize, ARJCallbackFunctionSpecifier: @#function}
+
+#define arj_callbacks(block, ...) static NSMutableDictionary* __arj__callbacks__cache;\
++(NSDictionary*)callbacks{\
+    if(!__arj__callbacks__cache){\
+        __arj__callbacks__cache = [NSMutableDictionary dictionaryWithDictionary:[ARJActiveRecord callbacks]];\
+        for(NSDictionary *dict in @[block,  __VA_ARGS__]){\
+            if(!__arj__callbacks__cache[dict[ARJCallbackTimingSpecifier]]){\
+                __arj__callbacks__cache[dict[ARJCallbackTimingSpecifier]] = [NSMutableArray array];\
+            }\
+            [__arj__callbacks__cache[dict[ARJCallbackTimingSpecifier]] addObject:dict[ARJCallbackFunctionSpecifier]];\
+        }\
+    }\
+    return __arj__callbacks__cache;\
+}
 
 
 @interface ARJActiveRecordHelper : NSObject

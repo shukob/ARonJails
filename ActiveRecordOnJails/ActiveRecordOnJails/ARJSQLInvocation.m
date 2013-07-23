@@ -1,6 +1,6 @@
 //
 //  ARJSQLInvocation.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/24.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -45,8 +45,8 @@ NSString * ARJSQLInvocationTypeSpecifier = @"ARJSQLInvocationTypeSpecifier";
     return self;
 }
 
--(id)invokeInDatabase:(id)database{
-    [self doesNotRecognizeSelector:@selector(invokeInDatabase:)];
+-(id)invokeInDatabaseManager:(ARJDatabaseManager*)manager{
+    [self doesNotRecognizeSelector:@selector(invokeInDatabaseManager:)];
     return nil;
 }
 

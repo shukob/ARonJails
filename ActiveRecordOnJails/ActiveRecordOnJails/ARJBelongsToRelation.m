@@ -1,6 +1,6 @@
 //
 //  ARJBelongsToRelation.m
-//  ActiveRecordOnJails
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/21.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -48,7 +48,8 @@
 }
 
 -(id)destinationForSource:(ARJActiveRecord *)source inDatabaseManager:(ARJDatabaseManager *)manager{
-    return [[self destinationModel] findFirst:@{@"id" : [source attributeForKey:self.associationKey]} inDatabaseManager:manager];
+    id _id = [source attributeForKey:self.associationKey];
+    return [[self destinationModel] findFirst:@{@"id" : _id} inDatabaseManager:manager];
 }
 
 
