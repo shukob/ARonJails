@@ -1,6 +1,6 @@
 //
 //  ARJActiveRecordTests.m
-//  ActiveRecordOnJails
+//  SuccessPlanner
 //
 //  Created by skonb on 2013/07/02.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -8,6 +8,7 @@
 
 #import "ARJActiveRecordTests.h"
 #import "ARJDatabaseManager.h"
+#import "CMUnitTestHelper.h"
 #import "SPTestUser.h"
 #import "SPTestOrganization.h"
 
@@ -16,6 +17,8 @@
     [[ARJDatabaseManager defaultManager]setDbName:@"test.sqlite"];
     [[ARJDatabaseManager defaultManager]setModels:@[@"SPTestUser", @"SPTestOrganization"]];
     [[ARJDatabaseManager defaultManager]migrate];
+    [[CMUnitTestHelper instance]setLogOutputPath:@"log.txt"];
+    [[CMUnitTestHelper instance]clearLogFile];
 }
 
 -(void)tearDown{
@@ -93,5 +96,56 @@
     user = [SPTestUser findFirst:@{@"age":@(30)}];
     STAssertEqualObjects([user attributeForKey:@"name"], @"some name", @"update");
 }
+
+-(void)testTimestampsWhenCreated{
+    SPTestUser *user = [SPTestUser create:@{@"age" : @(30)}];
+    user = [SPTestUser findFirst:nil];
+    STAssertNotNil([user attributeForKey:@"created_at"], @"created at is set");
+    STAssertEqualObjects([user attributeForKey:@"created_at"], [user attributeForKey:@"updated_at"], @"created_at and updated_at are indentical when created");
+    STAssertTrue([[user attributeForKey:@"created_at"]timeIntervalSinceNow] < 0, @"created at is in past");
+}
+
+
+-(void)testTimestampsWhenUpdated{
+    SPTestUser * user = [SPTestUser create:@{@"age": @(30)}];
+    user = [SPTestUser findFirst:nil];
+    NSDate *createdAt = [user attributeForKey:@"created_at"];
+    [user setAttribute:@"name" forKey:@"name"];
+    [user save];
+    user = [SPTestUser findFirst:nil];
+    NSDate *updatedAt = [user attributeForKey:@"updated_at"];
+    STAssertEqualObjects(createdAt, [user attributeForKey:@"created_at"], @"created at does not change on udpate");
+    STAssertNotNil(updatedAt, @"updated at is set");
+    STAssertTrue([updatedAt timeIntervalSinceNow] < 0, @"updated at is in past");
+}
+
+-(void)testScope{
+    [SPTestUser create:@{@"age" : @(5)}];
+    [SPTestUser create:@{@"age": @(11)}];
+    NSArray *users = [SPTestUser executeScopeForKey:@"under_age" withParams:@{@"age" : @(10)}];
+    STAssertTrue(users.count==1, @"scope correctness");
+}
+
+-(void)testAfterInitialize{
+    SPTestUser *user = [SPTestUser new];
+    STAssertEqualObjects(user.customProperty[@"afterInitialize"], @YES, @"after initialzie");
+}
+
+-(void)testAfterSave{
+    SPTestUser *user = [SPTestUser new];
+    [user save];
+
+    STAssertEqualObjects(user.customProperty[@"beforeSave"], @YES, @"before save");
+    STAssertEqualObjects(user.customProperty[@"afterSave"], @YES, @"after save");
+    STAssertEqualObjects(user.customProperty[@"beforeValidation"], @YES, @"before validation");
+    STAssertEqualObjects(user.customProperty[@"afterValidation"], @YES, @"after validation");
+    STAssertEqualObjects(user.customProperty[@"afterInitialize"], @YES, @"after initialzie");
+    STAssertEqualObjects(user.customProperty[@"beforeCreate"], @YES, @"before create");
+    STAssertEqualObjects(user.customProperty[@"afterCreate"], @YES, @"after create");
+}
+
+
+
+
 
 @end

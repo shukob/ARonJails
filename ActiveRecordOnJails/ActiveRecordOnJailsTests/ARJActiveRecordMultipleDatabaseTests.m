@@ -1,6 +1,6 @@
 //
 //  ARJActiveRecordMultipleDatabaseTests.m
-//  ActiveRecordOnJails
+//  SuccessPlanner
 //
 //  Created by skonb on 2013/07/02.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -8,6 +8,7 @@
 
 #import "ARJActiveRecordMultipleDatabaseTests.h"
 #import "ARJDatabaseManager.h"
+#import "CMUnitTestHelper.h"
 #import "SPTestUser.h"
 #import "SPTestOrganization.h"
 
@@ -31,6 +32,8 @@ static ARJDatabaseManager *manager2;
     [manager2 setDbName:@"test2.sqlite"];
     [manager2 setModels:@[@"SPTestUser", @"SPTestOrganization"]];
     [manager2 migrate];
+    [[CMUnitTestHelper instance]setLogOutputPath:@"log.txt"];
+    [[CMUnitTestHelper instance]clearLogFile];
 }
 
 -(void)tearDown{

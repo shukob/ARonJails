@@ -1,6 +1,6 @@
 //
 //  ARJActiveRecordInternalTests.m
-//  ActiveRecordOnJails
+//  SuccessPlanner
 //
 //  Created by skonb on 2013/07/02.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -9,6 +9,7 @@
 #import "ARJActiveRecordInternalTests.h"
 #import "ARJActiveRecordTests.h"
 #import "ARJDatabaseManager.h"
+#import "CMUnitTestHelper.h"
 #import "SPTestUser.h"
 #import "SPTestOrganization.h"
 
@@ -18,6 +19,8 @@
     [[ARJDatabaseManager defaultManager]setDbName:@"test.sqlite"];
     [[ARJDatabaseManager defaultManager]setModels:@[@"SPTestUser", @"SPTestOrganization"]];
     [[ARJDatabaseManager defaultManager]migrate];
+    [[CMUnitTestHelper instance]setLogOutputPath:@"log.txt"];
+    [[CMUnitTestHelper instance]clearLogFile];
 }
 
 -(void)tearDown{
@@ -34,22 +37,22 @@
     STAssertEqualObjects(user._columnDictionary[@"age"], @(10), @"updates in column dictionary");
 }
 
--(void)testMultiThread{
-    __block NSMutableArray *array = [NSMutableArray array];
-    NSRecursiveLock * lock = [NSRecursiveLock new];
-    dispatch_queue_t queue = dispatch_queue_create("queue", DISPATCH_QUEUE_CONCURRENT);
-    for (int i = 0; i < 100; ++i) {
-        dispatch_async(queue, ^{
-            SPTestUser *user = [SPTestUser create:@{@"age": @(10)}];
-            [lock lock];
-            [array addObject:user];
-            [lock unlock];
-        });
-    }
-    dispatch_barrier_sync(queue, ^{
-        STAssertTrue(array.count==100, @"");
-    });
-}
+//-(void)testMultiThread{
+//    __block NSMutableArray *array = [NSMutableArray array];
+//    NSRecursiveLock * lock = [NSRecursiveLock new];
+//    dispatch_queue_t queue = dispatch_queue_create("queue", DISPATCH_QUEUE_CONCURRENT);
+//    for (int i = 0; i < 100; ++i) {
+//        dispatch_async(queue, ^{
+//            SPTestUser *user = [SPTestUser create:@{@"age": @(10)}];
+//            [lock lock];
+//            [array addObject:user];
+//            [lock unlock];
+//        });
+//    }
+//    dispatch_barrier_sync(queue, ^{
+//        STAssertTrue(array.count==100, @"");
+//    });
+//}
 
 -(void)testCorrespondingDatabaseManager{
     SPTestOrganization *organization = [SPTestOrganization create:@{@"name": @"test"}];

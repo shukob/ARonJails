@@ -1,6 +1,6 @@
 //
 //  ARJValidationTests.m
-//  ActiveRecordOnJails
+//  SuccessPlanner
 //
 //  Created by skonb on 2013/06/28.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -9,9 +9,9 @@
 #import "ARJValidationTests.h"
 #import "ARJDatabaseManager.h"
 #import "SPTestUser.h"
+#import "CMUnitTestHelper.h"
 #import "SPTestOrganization.h"
 #import <QuartzCore/QuartzCore.h>
-#import <UIKit/UIKit.h>
 @implementation ARJValidationTests
 
 
@@ -19,6 +19,7 @@
     [[ARJDatabaseManager defaultManager]setDbName:@"test.sqlite"];
     [[ARJDatabaseManager defaultManager]setModels:@[@"SPTestUser", @"SPTestOrganization"]];
     [[ARJDatabaseManager defaultManager]migrate];
+    [[CMUnitTestHelper instance]setLogOutputPath:@"log.txt"];
 }
 
 +(void)tearDown{
@@ -27,11 +28,19 @@
 
 
 -(void)testValidateNumericality{
-    SPTestUser *user = [SPTestUser new];
-    [user setAttribute:@(-1) forKey:@"age"];
-    [user save];
-    STAssertTrue(user.errors.count==1, @"numericality validation ");
-    
+    @try {
+        SPTestUser *user = [SPTestUser new];
+        [user setAttribute:@(-1) forKey:@"age"];
+        [user save];
+        STAssertTrue(user.errors.count==1, @"numericality validation ");
+    }
+    @catch (NSException *exception) {
+        CMUnitTestLogException(exception);
+        STAssertTrue(NO, @"");
+    }
+    @finally {
+        
+    }
 }
 
 -(void)testValidateLength{
