@@ -99,7 +99,7 @@ NSString * const ARJCallbackFunctionSpecifier = @"callback_function";
 
 -(id)init{
     if ([super init]) {
-        self.valuePlaceholderRegex = [NSRegularExpression regularExpressionWithPattern:@"^.+ *\\? *$" options:0 error:nil];
+        self.valuePlaceholderRegex = [NSRegularExpression regularExpressionWithPattern:@"^.+ *\\?.*$" options:0 error:nil];
         self.tableSpecificationRegex = [NSRegularExpression regularExpressionWithPattern:@"^.+\\..+$" options:0 error:nil];
     }
     return self;

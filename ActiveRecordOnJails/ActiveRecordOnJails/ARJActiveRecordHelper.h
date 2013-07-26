@@ -206,6 +206,7 @@ arj_attributes_with_relational_keys
 
 #define arj_callbacks(block, ...) static NSMutableDictionary* __arj__callbacks__cache;\
 +(NSDictionary*)callbacks{\
+    NSLog(@"callbacks called on %@", self);\
     if(!__arj__callbacks__cache){\
         __arj__callbacks__cache = [NSMutableDictionary dictionaryWithDictionary:[ARJActiveRecord callbacks]];\
         for(NSDictionary *dict in @[block,  __VA_ARGS__]){\

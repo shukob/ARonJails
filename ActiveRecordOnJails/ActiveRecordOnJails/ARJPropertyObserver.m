@@ -39,7 +39,7 @@
         }
     }else if([[object class]relations][keyPath]){
         if (newValue) {
-            [object setAssociated:object forKey:keyPath];
+            [object setAssociated:newValue forKey:keyPath];
         }
     }
 }

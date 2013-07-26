@@ -137,7 +137,10 @@
 }
 
 -(BOOL)createTableName:(NSString*)tableName{
-    BOOL res=  [self.database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (id INTEGER PRIMARY KEY AUTOINCREMENT) ;", tableName]];
+    BOOL res =  [self.database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT) ;", tableName]];
+    if (res) {
+        res = [self.database executeUpdate:[NSString stringWithFormat:@"CREATE INDEX %@_id ON %@(id);", tableName, tableName]];
+    }
     return res;
 }
 
@@ -176,7 +179,7 @@
 }
 
 -(id)findModel:(Class)klass invocation:(ARJSQLInvocation *)invocation{
-    __block id result = nil;
+    __block id result = @[];
     [self runInTransaction:^BOOL(id database){
         
         FMResultSet *res = [self.database executeQuery:invocation.SQLString withArgumentsInArray:invocation.parameters];

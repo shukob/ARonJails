@@ -277,6 +277,7 @@ typedef enum _ARJScopeOperationType ARJScopeOperationType;
     if (!(self.params)[ARJScopeJoinsClause]) {
         (self.params)[ARJScopeJoinsClause] = [NSMutableArray array];
     }
+    [self.params[ARJScopeJoinsClause]addObject:joins];
     return self;
 }
 

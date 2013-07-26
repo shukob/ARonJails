@@ -1,6 +1,6 @@
 //
 //  ARJActiveRecordTests.m
-//  SuccessPlanner
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/07/02.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -144,8 +144,33 @@
     STAssertEqualObjects(user.customProperty[@"afterCreate"], @YES, @"after create");
 }
 
+#ifdef ARJ_USE_DYNAMIC_METHOD_IMP
 
+-(void)testDynamicGetterImp{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    SPTestUser *user = [SPTestUser new];
+    [user setAttribute:@(1) forKey:@"age"];
+    STAssertNoThrow([user performSelector:@selector(age)], @"dynamic attribute getter");
+    STAssertEqualObjects([user performSelector:@selector(age)], @(1), @"dynamic attribute getter correctness");
+    SPTestOrganization *org = [SPTestOrganization new];
+    STAssertNoThrow([org performSelector:@selector(users)], @"dynamic association getter");
+#pragma clang diagnostic pop
+}
 
+-(void)testDynamicSetterImp{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    SPTestUser *user = [SPTestUser new];
+    STAssertNoThrow([user performSelector:@selector(setAge:) withObject:@(1)], @"dynamic attribute setter");
+    STAssertEqualObjects([user attributeForKey:@"age"], @(1), @"dynamic attribute setter correctness");
+    SPTestOrganization *org = [SPTestOrganization new];
+    STAssertNoThrow([user performSelector:@selector(setOrganization:) withObject:org], @"dynamic association setter");
+    STAssertEqualObjects([user associatedForKey:@"organization"], org, @"dynamic association setter correctness");
+#pragma clang diagnostic pop
+}
 
-
+#endif /*ARJ_USE_DYNAMIC_METHOD_IMP*/
 @end

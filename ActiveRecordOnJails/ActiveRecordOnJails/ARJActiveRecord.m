@@ -14,7 +14,7 @@
 #import "ARJModelValidator.h"
 #import "ARJPropertyObserver.h"
 #import "ARJSQLInvocation.h"
-
+#import <objc/runtime.h>
 @interface ARJActiveRecord()
 @property (nonatomic, strong) NSMutableDictionary *relationCache;
 @property (nonatomic, assign) BOOL validated;
@@ -74,7 +74,7 @@
 }
 
 +(NSDictionary*)callbacks{
-    return @{ARJCallbackTimingBeforeValidation : @[@"setUpDefaults:"]};
+    return @{ARJCallbackTimingBeforeValidation : [NSMutableArray arrayWithObject:@"setUpDefaults:"]};//This must be mutable, because other before validation callbacks may be appended to it in subclass.
 }
 
 +(NSDictionary*)validations{
@@ -155,7 +155,16 @@
     return res;
 }
 
+-(BOOL)requiresSaving{
+    //If we already have column dictionary, that means that it is already saved in database,
+    //still not is updated nor relation is set, then it does not require saving any information.
+    return !self._columnDictionary || self._updateDictionary.count || self.relationCache.count;
+}
+
 -(BOOL)saveInDatabaseManager:(ARJDatabaseManager*)manager{
+    if (! [self requiresSaving]) {
+        return YES;
+    }
     self.saving = YES;
     BOOL res = NO;
     if (self.Id) {
@@ -301,10 +310,15 @@
 }
 
 -(void)setAttribute:(id)attribute forKey:(NSString *)key{
-    if ([[self class]attributesWithRelationalKeys][key]) {
-        [[[self class]attributesWithRelationalKeys][key]setValue:attribute forInstance:self];
+    if ([[self attributeForKey:key]isEqual:attribute]) {
+        return;
     }else{
-        self._updateDictionary[key]=attribute;
+        self.validated = NO;
+        if ([[self class]attributesWithRelationalKeys][key]) {
+            [[[self class]attributesWithRelationalKeys][key]setValue:attribute forInstance:self];
+        }else{
+            self._updateDictionary[key]=attribute;
+        }
     }
 }
 
@@ -437,7 +451,7 @@
             break;
             
     }
-    NSDictionary *allCallbacks = [[self class]callbacks];
+    NSDictionary *allCallbacks = [[self class] callbacks];
     NSArray * callbacks = allCallbacks[key];
     BOOL res = YES;
     for (NSString *selectorString in callbacks){
@@ -616,4 +630,80 @@
     
 }
 
+#ifdef ARJ_USE_DYNAMIC_METHOD_IMP
+
+static Class referenceKlassFromKVOClass(Class klass){
+    return klass;
+        //This is treated gracefully by KVO and not is necessary.
+//    static NSString * kvoClassPrefix = @"NSKVONotifying_";
+//    NSString *classString = NSStringFromClass(klass);
+//    if ([classString hasPrefix:kvoClassPrefix]){
+//        classString = [classString substringFromIndex:kvoClassPrefix.length];
+//        return NSClassFromString(classString);
+//    }else{
+//        return klass;
+//    }
+}
+
+static id arj_getter_IMP(id self, SEL _cmd){
+    Class referenceClass = referenceKlassFromKVOClass([self class]);
+    NSString *key = NSStringFromSelector(_cmd);
+    if ([referenceClass attributesWithRelationalKeys][key]) {
+        return [self attributeForKey:key];
+    }else if([referenceClass relations][key]){
+        return [self associatedForKey:key];
+    }else{
+        return nil;
+    }
+}
+
+static void arj_setter_IMP(id self, SEL _cmd, id value){
+    Class referenceClass = referenceKlassFromKVOClass([self class]);
+    id val = value;
+    NSMutableString *key = [NSStringFromSelector(_cmd) mutableCopy];
+    [key deleteCharactersInRange:NSMakeRange(0, 3)];
+    [key deleteCharactersInRange:NSMakeRange([key length] - 1, 1)];
+    NSString *firstChar = [key substringToIndex:1];
+    [key replaceCharactersInRange:NSMakeRange(0, 1) withString:[firstChar lowercaseString]];
+    if ([referenceClass attributesWithRelationalKeys][key]) {
+        [self setAttribute:val forKey:key];
+    }else if([referenceClass relations][key]){
+        [self setAssociated:val forKey:key];
+    }
+}
+
+
++ (BOOL)resolveInstanceMethod:(SEL)aSEL {
+    Class referenceClass = referenceKlassFromKVOClass([self class]);
+    if ([NSStringFromSelector(aSEL) hasPrefix:@"set"]) {
+        NSMutableString *key = [NSStringFromSelector(aSEL) mutableCopy];
+        [key deleteCharactersInRange:NSMakeRange(0, 3)];
+        [key deleteCharactersInRange:NSMakeRange([key length] - 1, 1)];
+        NSString *firstChar = [key substringToIndex:1];
+        [key replaceCharactersInRange:NSMakeRange(0, 1) withString:[firstChar lowercaseString]];
+        if ([referenceClass attributesWithRelationalKeys][key]) {
+            class_addMethod([self class], aSEL, (IMP)arj_setter_IMP, "v@:@");
+            return YES;
+        }else if([referenceClass relations][key]){
+            class_addMethod([self class], aSEL, (IMP)arj_setter_IMP, "v@:@");
+            return YES;
+        }else{
+            return NO;
+        }
+
+    } else {
+        NSString *key = NSStringFromSelector(aSEL);
+        if ([referenceClass attributesWithRelationalKeys][key]) {
+            class_addMethod([self class], aSEL,(IMP)arj_getter_IMP, "@@:");
+            return YES;
+        }else if([referenceClass relations][key]){
+            class_addMethod([self class], aSEL,(IMP)arj_getter_IMP, "@@:");
+            return YES;
+        }else{
+            return NO;
+        }
+    }
+
+}
+#endif /*ARJ_DYNAMIC_METHOD_IMP*/
 @end

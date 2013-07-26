@@ -1,6 +1,6 @@
 //
 //  SPTestUser.m
-//  SuccessPlanner
+//  ActiveRecord on Jails
 //
 //  Created by skonb on 2013/06/25.
 //  Copyright (c) 2013年 skonb. All rights reserved.
@@ -33,8 +33,7 @@ arj_scopes(arj_scope(under_age, {([scope WHERE:@{@"age < ?" : params[@"age"]}, n
            arj_scope(with_name, {([scope WHERE:@{@"name":params[@"name"]}, nil]);})
            );
 
-arj_callbacks(arj_before_validation(setUpDefaults:),
-              arj_after_initialize(afterInitialize:),
+arj_callbacks(arj_after_initialize(afterInitialize:),
               arj_after_create(afterCreate:),
               arj_after_destroy(afterDestroy:),
               arj_after_save(afterSave:),
@@ -43,7 +42,9 @@ arj_callbacks(arj_before_validation(setUpDefaults:),
               arj_before_validation(beforeValidation:),
               arj_before_destroy(beforeDestroy:),
               arj_before_save(beforeSave:),
-              arj_before_create(beforeCreate:));
+              arj_before_create(beforeCreate:)
+              );
+
 
 -(id)afterInitialize:(id)sender{
     self.customProperty[@"afterInitialize"]=@YES;
