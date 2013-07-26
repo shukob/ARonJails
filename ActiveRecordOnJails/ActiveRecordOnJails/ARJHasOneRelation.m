@@ -72,7 +72,11 @@
 }
 
 -(id)destinationForSource:(ARJActiveRecord *)source inDatabaseManager:(ARJDatabaseManager *)manager{
-    return [self.destinationModel findFirst:@{self.foreignKey : @([source Id])} inDatabaseManager:manager];
+    if (![source Id]) {
+        return nil;
+    }else{
+        return [self.destinationModel findFirst:@{self.foreignKey : @([source Id])} inDatabaseManager:manager];
+    }
 }
 
 -(id)destinationForSource:(ARJActiveRecord *)source{

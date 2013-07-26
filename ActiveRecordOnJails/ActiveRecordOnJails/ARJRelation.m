@@ -151,6 +151,8 @@
 -(id)blankValue{
     return [NSNull null];
 }
-
+-(NSString*)foreignRelationName{
+    return self.inverseRelation.relationName;
+}
 
 @end

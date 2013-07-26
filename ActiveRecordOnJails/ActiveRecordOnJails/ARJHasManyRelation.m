@@ -91,8 +91,12 @@
 }
 
 -(id)destinationForSource:(ARJActiveRecord *)source inDatabaseManager:(ARJDatabaseManager *)manager{
+    if (![source Id]) {
+        return [NSMutableArray array];
+    }else{
     NSMutableArray * res =  [NSMutableArray arrayWithArray:[self.destinationModel find:@{self.foreignKey : @([source Id])} inDatabaseManager:manager]];
     return res;
+    }
 }
 
 -(id)destinationForSource:(ARJActiveRecord *)source{
