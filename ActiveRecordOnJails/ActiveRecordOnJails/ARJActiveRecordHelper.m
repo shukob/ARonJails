@@ -124,4 +124,10 @@ static ARJActiveRecordHelper * ___instance;
     return ___instance;
 }
 
+-(BOOL)hasSameRecord:(ARJActiveRecord*)record inEnumerable:(id)enumerable{
+    return [[enumerable indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        return [obj Id] && [obj Id]==[record Id];
+    }]count] != 0;
+}
+
 @end

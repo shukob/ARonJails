@@ -137,7 +137,7 @@
     return [self.dictionary[ARJAutoSaveSpecifier]boolValue];
 }
 
-+(ARJDatabaseManager*)expectedDatabaseManagerForSource:(ARJActiveRecord*)source andDestination:(ARJActiveRecord*)destination{
++(ARJDatabaseManager*)expectedDatabaseManagerForSource:(ARJActiveRecord*)source andDestination:(id)destination{
     ARJDatabaseManager *manager = [destination correspondingDatabaseManager];
     if (!manager) {
         manager = [source correspondingDatabaseManager];
@@ -147,5 +147,10 @@
     }
     return manager;
 }
+
+-(id)blankValue{
+    return [NSNull null];
+}
+
 
 @end

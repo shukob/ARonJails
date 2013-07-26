@@ -22,6 +22,7 @@ typedef enum _ARJDatabaseLocation ARJDatabaseLocation;
 @property (nonatomic, assign) ARJDatabaseLocation databaseLocation;
 +(ARJDatabaseManager*)defaultManager;
 -(BOOL)migrate;
+-(NSInteger)countModel:(Class)klass condition:(NSDictionary*)condition;
 -(id)findModel:(Class)klass condition:(NSDictionary*)condition;
 -(id)findModel:(Class)klass invocation:(ARJSQLInvocation*)invocation;
 -(id)findFirstModel:(Class)klass condition:(NSDictionary *)condition;

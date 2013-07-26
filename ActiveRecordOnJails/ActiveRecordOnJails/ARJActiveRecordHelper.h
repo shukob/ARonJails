@@ -219,9 +219,10 @@ arj_attributes_with_relational_keys
     return __arj__callbacks__cache;\
 }
 
-
+@class ARJActiveRecord;
 @interface ARJActiveRecordHelper : NSObject
 -(BOOL)hasValuePlaceholderInString:(NSString*)string;
 -(BOOL)hasTableSpecificationInString:(NSString*)string;
 +(ARJActiveRecordHelper*)defaultHelper;
+-(BOOL)hasSameRecord:(ARJActiveRecord*)record inEnumerable:(id)enumerable;
 @end

@@ -34,9 +34,11 @@ typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 @property (nonatomic, assign) NSInteger Id;
 @property (nonatomic, strong) NSDictionary *_columnDictionary;
 @property (nonatomic, strong) NSMutableDictionary * _updateDictionary;
+
 @property (nonatomic, readonly) BOOL valid;
 @property (nonatomic, strong) ARJValidationErrors *errors;
 @property (nonatomic, assign) BOOL changed;
+@property (nonatomic, assign) BOOL saving;
 @property (nonatomic, weak) ARJDatabaseManager * correspondingDatabaseManager;
 -(id)initWithDictionary:(NSDictionary*)dictionary;
 -(id)latestValueForKey:(NSString*)key;
@@ -54,6 +56,7 @@ typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 
 
 /* uses defaultManager */
++(NSInteger)count;
 +(id)find:(NSDictionary*)condition;
 +(id)findFirst:(NSDictionary*)condition;
 +(NSArray*)findAll;
@@ -66,6 +69,7 @@ typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 +(id)executeScopeForKey:(NSString*)name withParams:(NSDictionary*)params;
 
 /* uses specific manager */
++(NSInteger)countInDatabaseManager:(ARJDatabaseManager*)manager;
 +(id)find:(NSDictionary*)condition inDatabaseManager:(ARJDatabaseManager*)manager;
 +(id)findFirst:(NSDictionary*)condition inDatabaseManager:(ARJDatabaseManager*)manager;
 +(NSArray*)findAllInDatabaseManager:(ARJDatabaseManager*)manager;

@@ -14,7 +14,7 @@ arj_model(Organization);
 
 arj_attributes(arj_string(name));
 
-arj_relations(arj_has_many(users, @"class": @"SPTestUser"));
+arj_relations(arj_has_many(users,ARJClassNameSpecifier: @"SPTestUser", ARJDependencySpecifier : ARJDependencyDestroySpecifier, ARJAutoSaveSpecifier : @YES));
 
 arj_validations(arj_validates_presence_of(name),
                 arj_validates_associated(users));

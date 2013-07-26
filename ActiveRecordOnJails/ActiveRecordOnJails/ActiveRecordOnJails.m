@@ -8,6 +8,4 @@
 
 #import "ActiveRecordOnJails.h"
 
-@implementation ActiveRecordOnJails
 
-@end

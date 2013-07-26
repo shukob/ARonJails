@@ -178,6 +178,30 @@
     }];
 }
 
+
+    
+-(NSInteger)countModel:(Class)klass condition:(NSDictionary*)condition{
+    ARJScope *scoped = [[klass scoped]COUNT];
+    scoped = [scoped WHERE:condition, nil];
+    ARJSQLInvocation *invocation = [scoped SQLInvocation];
+    __block NSInteger result = 0;
+    [self runInTransaction:^BOOL(id database){
+        FMResultSet *res = [self.database executeQuery:invocation.SQLString withArgumentsInArray:invocation.parameters];
+        
+        if(res){
+            while ([res next]) {
+                result = [res intForColumnIndex:0];
+            }
+            [res close];
+            return YES;
+        }else{
+            return NO;
+        }
+        
+    }];
+    return result;
+}
+
 -(id)findModel:(Class)klass invocation:(ARJSQLInvocation *)invocation{
     __block id result = @[];
     [self runInTransaction:^BOOL(id database){

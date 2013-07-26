@@ -16,10 +16,10 @@
 #import "ARJSQLInvocation.h"
 #import <objc/runtime.h>
 @interface ARJActiveRecord()
-@property (nonatomic, strong) NSMutableDictionary *relationCache;
 @property (nonatomic, assign) BOOL validated;
-@property (nonatomic, assign) BOOL saving;
+@property (nonatomic, strong) NSMutableDictionary *relationCache;
 @property (nonatomic, assign) BOOL savingAssociated;
+@property (nonatomic, strong) NSMutableDictionary *insertedButNotRetrievedAssociations;
 @end
 
 @implementation ARJActiveRecord
@@ -294,7 +294,7 @@
 }
 
 -(ARJScope*)destroyScope{
-    return [[[ARJScope DELETE]FROM:[[self class]tableName]] WHERE:[self idWhereDictionary], nil];
+    return [[[ARJScope DELETE]FROM:[[self class]tableName]]WHERE:[self idWhereDictionary], nil];
 }
 
 -(NSDictionary*)idWhereDictionary{
@@ -339,16 +339,26 @@
         self.relationCache = [NSMutableDictionary dictionary];
     }
     id res = self.relationCache[key];
-    if(!res){
+    if(!res || [self.insertedButNotRetrievedAssociations[key]boolValue]){
         ARJRelation *relation = [[self class]relationForKey:key];
         res = [relation destinationForSource:self];
+        if ([res isKindOfClass:[NSArray class]] && [self.insertedButNotRetrievedAssociations[key]boolValue]) {
+            for (ARJActiveRecord *record in self.relationCache[key]){
+                if (![[ARJActiveRecordHelper defaultHelper]hasSameRecord:record inEnumerable:res]) {
+                    [res addObject:record];
+                }
+            }
+        }
+        self.relationCache[key] = res ? res : (self.relationCache[key] ? self.relationCache[key] : [relation blankValue]);
+        self.insertedButNotRetrievedAssociations[key] = @NO;
     }
-    return res;
+    return arj_nil(res) ? nil : res;
 }
 
 
 -(void)clearRelationCache{
     [self.relationCache removeAllObjects];
+    [self.insertedButNotRetrievedAssociations removeAllObjects];
 }
 
 -(NSInteger)Id{
@@ -365,9 +375,29 @@
 }
 
 -(void)insertAssociated:(id)associated forKey:(NSString *)key{
-    
-}
+    ARJRelation *relation  = [[self class]relationForKey:key];
+    if(relation){
+        if(!self.relationCache[key]){
+            self.relationCache[key]=[NSMutableArray array];
+        }
+        if (!self.insertedButNotRetrievedAssociations) {
+            self.insertedButNotRetrievedAssociations = [NSMutableDictionary dictionary];
+        }
+        NSIndexSet *sameObjectIndeces = [self.relationCache[key] indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+            return [obj Id] && [obj Id]==[associated Id];
+        }];
+        if ([sameObjectIndeces count]) {
+            [self.relationCache[key]replaceObjectAtIndex:sameObjectIndeces.firstIndex withObject:associated];
+        }else{
+            [self.relationCache[key]addObject:associated];
 
+        }
+        if(!self.insertedButNotRetrievedAssociations[key]){
+            //If not nil but @NO, then already retrieved and not neccesary to refresh.
+            self.insertedButNotRetrievedAssociations[key] = @YES;
+        }
+    }
+}
 
 -(BOOL)willDestroy{
     BOOL callbackResult = [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingBeforeDestroy];
@@ -535,7 +565,8 @@
     for (NSString * relationKey in [[self class]relations].allKeys){
         ARJRelation *relation = [[self class]relations][relationKey];
         if (relation.autosave) {
-            if (self.relationCache[relationKey] && ![self.relationCache[relationKey]saving]) {
+            BOOL res = YES;
+            if (self.relationCache[relationKey] && ([self.relationCache[relationKey] isKindOfClass:[NSArray class]] || ![self.relationCache[relationKey]saving])) {
                 if(![relation setDestinationInstance:self.relationCache[relationKey] toSourceInstance:self inDatabaseManager:self.correspondingDatabaseManager]){
                     res = NO;
                     break;
@@ -553,7 +584,7 @@
         if (temp) {
             self._columnDictionary = temp._columnDictionary;
             [self._updateDictionary removeAllObjects];;
-            [self.relationCache removeAllObjects];
+            [self clearRelationCache];
         }
     }
 }
@@ -627,22 +658,30 @@
 
 -(void)dealloc{
     [[ARJPropertyObserver defaultObserver]unRegister:self];
-    
+}
+
+
++(NSInteger)count{
+    return [self countInDatabaseManager:[ARJDatabaseManager defaultManager]];
+}
+
++(NSInteger)countInDatabaseManager:(ARJDatabaseManager *)manager{
+    return [manager countModel:self condition:nil];
 }
 
 #ifdef ARJ_USE_DYNAMIC_METHOD_IMP
 
 static Class referenceKlassFromKVOClass(Class klass){
     return klass;
-        //This is treated gracefully by KVO and not is necessary.
-//    static NSString * kvoClassPrefix = @"NSKVONotifying_";
-//    NSString *classString = NSStringFromClass(klass);
-//    if ([classString hasPrefix:kvoClassPrefix]){
-//        classString = [classString substringFromIndex:kvoClassPrefix.length];
-//        return NSClassFromString(classString);
-//    }else{
-//        return klass;
-//    }
+    //This is treated gracefully by KVO and not is necessary.
+    //    static NSString * kvoClassPrefix = @"NSKVONotifying_";
+    //    NSString *classString = NSStringFromClass(klass);
+    //    if ([classString hasPrefix:kvoClassPrefix]){
+    //        classString = [classString substringFromIndex:kvoClassPrefix.length];
+    //        return NSClassFromString(classString);
+    //    }else{
+    //        return klass;
+    //    }
 }
 
 static id arj_getter_IMP(id self, SEL _cmd){
@@ -690,7 +729,7 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
         }else{
             return NO;
         }
-
+        
     } else {
         NSString *key = NSStringFromSelector(aSEL);
         if ([referenceClass attributesWithRelationalKeys][key]) {
@@ -703,7 +742,7 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
             return NO;
         }
     }
-
+    
 }
 #endif /*ARJ_DYNAMIC_METHOD_IMP*/
 @end
