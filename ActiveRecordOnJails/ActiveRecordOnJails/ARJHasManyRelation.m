@@ -71,8 +71,11 @@
             }
         }
         if ([destination isKindOfClass:[NSArray class]]) {
+            //TODO make it one transaction for all records
             for (ARJActiveRecord *record in destination){
                 [record setAttribute:@([source Id]) forKey:self.foreignKey];
+                
+
                 if (![record saveInDatabaseManager:manager]) {
                     return NO;
                 }

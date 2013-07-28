@@ -87,13 +87,13 @@ extern NSString * const ARJCallbackTimingAfterInitialize;
 extern NSString * const ARJCallbackTimingSpecifier;
 extern NSString * const ARJCallbackFunctionSpecifier;
 
-#define arj_nil(target) (!(target) || (target) == [NSNull null])
+#define arj_nil(target) (!(target) || (NSNull*)(target) == [NSNull null])
 
-#define arj_not_nil(target) ((target) && (target) != [NSNull null])
+#define arj_not_nil(target) ((target) && (NSNull*)(target) != [NSNull null])
 
-#define arj_blank(target) (arj_nil((target)) || ([(target) isKindOfClass:[NSString class]] && [(target) length]==0) || ([(target) isKindOfClass:[NSNumber class]] && [(target) integerValue]==0))
+#define arj_blank(target) (arj_nil((target)) || ([(target) isKindOfClass:[NSString class]] && [(NSString*)(target) length]==0) || ([(target) isKindOfClass:[NSNumber class]] && [(NSNumber*)(target) integerValue]==0))
 
-#define arj_present(target) (arj_not_nil((target)) && (([(target) isKindOfClass:[NSString class]] && [(target) length]!=0) || ([(target) isKindOfClass:[NSNumber class]] && [(target) integerValue]!=0) || (![(target) isKindOfClass:[NSString class]] && ![(target) isKindOfClass:[NSNumber class]])))
+#define arj_present(target) (arj_not_nil((target)) && (([(target) isKindOfClass:[NSString class]] && [(NSString*)(target) length]!=0) || ([(target) isKindOfClass:[NSNumber class]] && [(NSNumber*)(target) integerValue]!=0) || (![(target) isKindOfClass:[NSString class]] && ![(target) isKindOfClass:[NSNumber class]])))
 
 #define arj_model(name) +(NSString*)model{return @#name;}
 
