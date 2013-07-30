@@ -319,6 +319,9 @@
 }
 
 -(void)setAttribute:(id)attribute forKey:(NSString *)key{
+    if (!attribute) {
+        attribute = [NSNull null];
+    }
     if ([[self attributeForKey:key]isEqual:attribute]) {
         return;
     }else{
