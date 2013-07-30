@@ -19,6 +19,7 @@ arj_attributes(arj_string(name, ARJAttributeDefaultValueSpecifier : @"test"),
                arj_float(height),
                arj_string(email));
 
+arj_dynamic_property_imp(name);
 
 arj_relations(arj_belongs_to(organization, ARJClassNameSpecifier : @"SPTestOrganization", ARJAutoSaveSpecifier : @YES));
 

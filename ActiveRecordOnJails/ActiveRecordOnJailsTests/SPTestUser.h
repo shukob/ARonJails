@@ -9,7 +9,7 @@
 #import "ARJActiveRecord.h"
 
 @interface SPTestUser : ARJActiveRecord
-@property (nonatomic, strong) NSString * name;
+arj_typed_property(NSString *, name);
 +(id)validateSizeOfPicture:(id)instance;
 @property (nonatomic, strong) NSMutableDictionary * customProperty;
 @end

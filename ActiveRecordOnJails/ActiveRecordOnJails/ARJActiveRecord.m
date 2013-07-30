@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSMutableDictionary *relationCache;
 @property (nonatomic, assign) BOOL savingAssociated;
 @property (nonatomic, strong) NSMutableDictionary *insertedButNotRetrievedAssociations;
+
 @end
 
 @implementation ARJActiveRecord
@@ -199,7 +200,7 @@
             if(![self willCreate]){
                 return NO;
             }
-            ARJActiveRecord* instance = [[self class]create:self._updateDictionary inDatabaseManager:manager];
+            ARJActiveRecord* instance = [[self class]create:self._updateDictionary relations:self.relationCache inDatabaseManager:manager];
             self._columnDictionary = instance._columnDictionary;
             if (![self didCreate]) {
                 return NO;
@@ -249,9 +250,12 @@
     }
 }
 
-+(id)create:(NSDictionary*)attributes inDatabaseManager:(ARJDatabaseManager*)manager{
++(id)create:(NSDictionary*)attributes relations:(NSDictionary*)relations inDatabaseManager:(ARJDatabaseManager*)manager{
     ARJActiveRecord * tempInstance = [self new];
     [tempInstance._updateDictionary addEntriesFromDictionary:attributes];
+    for (NSString *key in relations){
+        [tempInstance setAssociated:relations[key] forKey:key];
+    }
     if(![tempInstance willValidate]){
         return tempInstance;
     }
@@ -279,6 +283,11 @@
     }else{
         return tempInstance;
     }
+}
+
+
++(id)create:(NSDictionary*)attributes inDatabaseManager:(ARJDatabaseManager*)manager{
+    return [self create:attributes relations:nil inDatabaseManager:manager];
 }
 
 +(ARJScope*)scoped{
@@ -371,6 +380,9 @@
     ARJRelation *relation  = [[self class]relationForKey:key];
     if(relation){
         self.relationCache[key]=associated;
+        if ([[relation attributes]count] && [associated Id]) {
+            [self setAttribute:@([associated Id]) forKey:[[relation attributes]allKeys][0]];
+        }
     }
 }
 
@@ -552,6 +564,8 @@
 -(id)latestValueForKey:(NSString *)key{
     if (self._updateDictionary[key]) {
         return self._updateDictionary[key];
+    }else if([[self class]relations][key]){
+        return [self associatedForKey:key];
     }else{
         return self._columnDictionary[key];
     }
@@ -588,6 +602,7 @@
             [self clearRelationCache];
         }
     }
+    [self.errors clearErrors];
 }
 
 -(void)setId:(NSInteger)Id{

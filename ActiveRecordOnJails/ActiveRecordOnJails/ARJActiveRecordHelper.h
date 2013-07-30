@@ -91,9 +91,9 @@ extern NSString * const ARJCallbackFunctionSpecifier;
 
 #define arj_not_nil(target) ((target) && (NSNull*)(target) != [NSNull null])
 
-#define arj_blank(target) (arj_nil((target)) || ([(target) isKindOfClass:[NSString class]] && [(NSString*)(target) length]==0) || ([(target) isKindOfClass:[NSNumber class]] && [(NSNumber*)(target) integerValue]==0))
+#define arj_blank(target) (arj_nil((target)) || ([(target) isKindOfClass:[NSString class]] && [(NSString*)(target) length]==0) || ([(target) isKindOfClass:[NSNumber class]] && [(NSNumber*)(target) integerValue]==0) || ([(target) isKindOfClass:[NSArray class]] && [(NSArray*)(target) count]==0))
 
-#define arj_present(target) (arj_not_nil((target)) && (([(target) isKindOfClass:[NSString class]] && [(NSString*)(target) length]!=0) || ([(target) isKindOfClass:[NSNumber class]] && [(NSNumber*)(target) integerValue]!=0) || (![(target) isKindOfClass:[NSString class]] && ![(target) isKindOfClass:[NSNumber class]])))
+#define arj_present(target) (arj_not_nil((target)) && (([(target) isKindOfClass:[NSString class]] && [(NSString*)(target) length]!=0) || ([(target) isKindOfClass:[NSNumber class]] && [(NSNumber*)(target) integerValue]!=0) || ([(target) isKindOfClass:[NSArray class]] && [(NSArray*)(target) count]!=0)))
 
 #define arj_model(name) +(NSString*)model{return @#name;}
 
@@ -218,6 +218,14 @@ arj_attributes_with_relational_keys
     }\
     return __arj__callbacks__cache;\
 }
+
+#define arj_property(name) @property (nonatomic, strong) id name
+#define arj_properties(name, ...) @property (nonatomic, strong) id name, __VA_ARGS__
+#define arj_typed_property(type, name) @property (nonatomic, strong) type name;
+#define arj_dynamic_property_imp(name) @dynamic name
+#define arj_dynamic_properties_imp(name, ...) @dynamic name, __VA_ARGS__
+#define arj_number_property(numberType, name) @property (nonatomic, strong) NSNumber* name;\
+@property (nonatomic, assign) numberType name##_primitive
 
 @class ARJActiveRecord;
 @interface ARJActiveRecordHelper : NSObject

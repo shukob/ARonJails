@@ -13,6 +13,7 @@
 @implementation ARJPropertyObserver
 
 -(void)registerForPropertyObservation:(ARJActiveRecord*)modelInstance{
+#ifndef ARJ_USE_DYNAMIC_METHOD_IMP
     NSDictionary *attributes = [[modelInstance class]attributes];
     for(NSString *attributeName in attributes.allKeys){
         if ([attributeName isEqualToString:@"id"]) {
@@ -27,10 +28,11 @@
         NSString *keyPath = relationName;
         [modelInstance addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:(void*)relationName];
     }
-    
+#endif
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+#ifndef ARJ_USE_DYNAMIC_METHOD_IMP
     id newValue = change[NSKeyValueChangeNewKey];
     NSString *columnName = (__bridge NSString*)context;
     if ([[object class]attributes][keyPath]) {
@@ -42,6 +44,7 @@
             [object setAssociated:newValue forKey:keyPath];
         }
     }
+#endif
 }
 
 static ARJPropertyObserver* ___instance;
@@ -53,6 +56,7 @@ static ARJPropertyObserver* ___instance;
 }
 
 -(void)unRegister:(ARJActiveRecord *)modelInstance{
+#ifndef ARJ_USE_DYNAMIC_METHOD_IMP
     NSDictionary *attributes = [[modelInstance class]attributes];
     for(NSString *attributeName in attributes.allKeys){
         if ([attributeName isEqualToString:@"id"]) {
@@ -67,5 +71,7 @@ static ARJPropertyObserver* ___instance;
         NSString *keyPath = relationName;
         [modelInstance removeObserver:self forKeyPath:keyPath];
     }
+#endif
 }
+
 @end

@@ -155,4 +155,17 @@
     return self.inverseRelation.relationName;
 }
 
+-(void)updateDependency{
+    if ([self.dictionary[ARJDependencySpecifier]isEqualToString:ARJDependencyDestroySpecifier]) {
+        _dependency = ARJRelationDependencyDestroy;
+    }else{
+        _dependency = ARJRelationDependencyNullify;
+    }
+}
+
+-(void)setDictionary:(NSDictionary *)dictionary{
+    _dictionary = dictionary;
+    [self updateDependency];
+}
+
 @end

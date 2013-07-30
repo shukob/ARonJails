@@ -15,6 +15,7 @@
 }
 
 -(BOOL)willDestroySourceInstance:(ARJActiveRecord *)instance inDatabaseManager:(ARJDatabaseManager *)manager{
+    [instance reload];
     return [manager runInTransaction:^BOOL(id database){
         for (ARJActiveRecord * record in [instance associatedForKey:self.relationName]){
             if (self.dependency == ARJRelationDependencyNullify) {
