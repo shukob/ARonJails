@@ -137,7 +137,7 @@ extern NSString * const ARJCallbackFunctionSpecifier;
 #define arj_attributes(block, ...) static NSMutableDictionary *__arj__attributes__cache;\
 +(NSDictionary*)attributes{\
     if(!__arj__attributes__cache){\
-        __arj__attributes__cache = [NSMutableDictionary dictionaryWithDictionary:[ARJActiveRecord attributes]];\
+        __arj__attributes__cache = [NSMutableDictionary dictionaryWithDictionary:[super attributes]];\
         for(NSDictionary *dict in @[block,  __VA_ARGS__]){\
             __arj__attributes__cache[dict[ARJAttributeNameSpecifier]] = [ARJModelAttribute modelAttributeWithDictionary:dict];\
         }\
@@ -208,7 +208,7 @@ arj_attributes_with_relational_keys
 +(NSDictionary*)callbacks{\
     NSLog(@"callbacks called on %@", self);\
     if(!__arj__callbacks__cache){\
-        __arj__callbacks__cache = [NSMutableDictionary dictionaryWithDictionary:[ARJActiveRecord callbacks]];\
+        __arj__callbacks__cache = [NSMutableDictionary dictionaryWithDictionary:[super callbacks]];\
         for(NSDictionary *dict in @[block,  __VA_ARGS__]){\
             if(!__arj__callbacks__cache[dict[ARJCallbackTimingSpecifier]]){\
                 __arj__callbacks__cache[dict[ARJCallbackTimingSpecifier]] = [NSMutableArray array];\

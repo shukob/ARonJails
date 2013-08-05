@@ -40,7 +40,10 @@ typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 @property (nonatomic, assign) BOOL changed;
 @property (nonatomic, assign) BOOL saving;
 @property (nonatomic, weak) ARJDatabaseManager * correspondingDatabaseManager;
+arj_typed_property(NSDate*, created_at);
+arj_typed_property(NSDate*, updated_at);
 -(id)initWithDictionary:(NSDictionary*)dictionary;
+-(id)initWithDictionary:(NSDictionary *)dictionary inDatabaseManager:(ARJDatabaseManager*)manager;
 -(id)latestValueForKey:(NSString*)key;
 +(ARJActiveRecord*)instanceWithDictionary:(NSDictionary*)dictionary;
 +(NSDictionary*)schema;
@@ -108,6 +111,7 @@ typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 -(BOOL)saveAssociated;
 
 -(void)reload;
+-(void)copyAttributesFromRecord:(ARJActiveRecord*)another;
 
 //Pre-defined callback function
 -(id)setUpDefaults:(id)sender;

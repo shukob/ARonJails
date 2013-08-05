@@ -24,7 +24,7 @@
 @end
 
 @implementation ARJActiveRecord
-
+arj_dynamic_properties_imp(created_at, updated_at);
 -(id)init{
     if ([super init]) {
         self._updateDictionary = [NSMutableDictionary dictionary];
@@ -637,6 +637,13 @@
     return self;
 }
 
+-(id)initWithDictionary:(NSDictionary *)dictionary inDatabaseManager:(ARJDatabaseManager *)manager{
+    if ([self initWithDictionary:dictionary]) {
+        self.correspondingDatabaseManager = manager;
+    }
+    return self;
+}
+
 +(id)findOrCreate:(NSDictionary *)conditions{
     return [self findOrCreate:conditions inDatabaseManager:[ARJDatabaseManager defaultManager]];
 }
@@ -763,5 +770,20 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
     }
     
 }
+
+-(void)copyAttributesFromRecord:(ARJActiveRecord*)another{
+    for (NSString *key in [[self class]attributes]){
+        if ([key isEqualToString:@"id"]) {
+            continue;
+        }
+        id value = [another attributeForKey:key];
+        
+        if (!value) {
+            value = [NSNull null];
+        }
+        [self setAttribute:value forKey:key];
+    }
+}
+
 #endif /*ARJ_DYNAMIC_METHOD_IMP*/
 @end

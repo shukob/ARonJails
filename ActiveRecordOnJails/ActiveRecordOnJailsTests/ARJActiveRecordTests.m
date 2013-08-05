@@ -210,4 +210,16 @@
     STAssertTrue([SPTestUser count]==1, @"correctly counted");
 }
 
+-(void)testRecursiveRelationship{
+    SPTestUser *child = [SPTestUser create:nil];
+    SPTestUser *parent = [SPTestUser create:nil];
+    [child setAssociated:parent forKey:@"parent"];
+    [child save];
+    [child reload];
+    [parent reload];
+    
+    STAssertNotNil([child associatedForKey:@"parent"], @"recursive relation");
+    STAssertTrue([[parent associatedForKey:@"children"]count]==1, @"recursive relation");
+}
+
 @end
