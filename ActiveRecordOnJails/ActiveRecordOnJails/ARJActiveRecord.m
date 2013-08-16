@@ -771,6 +771,9 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
     
 }
 
+
+#endif /*ARJ_DYNAMIC_METHOD_IMP*/
+
 -(void)copyAttributesFromRecord:(ARJActiveRecord*)another{
     for (NSString *key in [[self class]attributes]){
         if ([key isEqualToString:@"id"]) {
@@ -785,5 +788,17 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
     }
 }
 
-#endif /*ARJ_DYNAMIC_METHOD_IMP*/
++(NSInteger)count:(NSDictionary *)condition{
+    return [self count:condition inDatabaseManager:[ARJDatabaseManager defaultManager]];
+}
+
++(NSInteger)count:(NSDictionary *)condition inDatabaseManager:(ARJDatabaseManager *)manager{
+    return [manager countModel:self condition:condition];
+}
+
+
+-(BOOL)isEqualToRecord:(ARJActiveRecord *)record{
+    return self.Id && self.Id == record.Id;
+}
+
 @end

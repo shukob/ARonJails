@@ -202,12 +202,12 @@
     [org insertAssociated:[SPTestUser new] forKey:@"users"];
     STAssertTrue([[org associatedForKey:@"users"]count]==2, @"2 inserted");
     [org destroy];
-    STAssertTrue([SPTestUser count]==0, @"dependency destroyed");
+    STAssertTrue([SPTestUser count:nil]==0, @"dependency destroyed");
 }
 
 -(void)testCount{
     [SPTestUser create:nil];
-    STAssertTrue([SPTestUser count]==1, @"correctly counted");
+    STAssertTrue([SPTestUser count:nil]==1, @"correctly counted");
 }
 
 -(void)testRecursiveRelationship{

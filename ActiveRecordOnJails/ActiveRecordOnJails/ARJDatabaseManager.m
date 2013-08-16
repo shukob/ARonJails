@@ -377,4 +377,12 @@ static ARJDatabaseManager *___instance;
         return [self defaultManager];
     }
 }
+
+-(void)close{
+    [self.dbLock lock];
+    [self.database close];
+    self.database = nil;
+    [self.dbLock unlock];
+}
+
 @end

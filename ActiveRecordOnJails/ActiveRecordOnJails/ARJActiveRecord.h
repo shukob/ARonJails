@@ -59,7 +59,7 @@ arj_typed_property(NSDate*, updated_at);
 
 
 /* uses defaultManager */
-+(NSInteger)count;
++(NSInteger)count:(NSDictionary*)condition;
 +(id)find:(NSDictionary*)condition;
 +(id)findFirst:(NSDictionary*)condition;
 +(NSArray*)findAll;
@@ -72,7 +72,7 @@ arj_typed_property(NSDate*, updated_at);
 +(id)executeScopeForKey:(NSString*)name withParams:(NSDictionary*)params;
 
 /* uses specific manager */
-+(NSInteger)countInDatabaseManager:(ARJDatabaseManager*)manager;
++(NSInteger)count:(NSDictionary*)condition inDatabaseManager:(ARJDatabaseManager*)manager;
 +(id)find:(NSDictionary*)condition inDatabaseManager:(ARJDatabaseManager*)manager;
 +(id)findFirst:(NSDictionary*)condition inDatabaseManager:(ARJDatabaseManager*)manager;
 +(NSArray*)findAllInDatabaseManager:(ARJDatabaseManager*)manager;
@@ -115,5 +115,8 @@ arj_typed_property(NSDate*, updated_at);
 
 //Pre-defined callback function
 -(id)setUpDefaults:(id)sender;
+
+
+-(BOOL)isEqualToRecord:(ARJActiveRecord*)record;
 
 @end

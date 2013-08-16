@@ -93,7 +93,7 @@ extern NSString * const ARJCallbackFunctionSpecifier;
 
 #define arj_blank(target) (arj_nil((target)) || ([(target) isKindOfClass:[NSString class]] && [(NSString*)(target) length]==0) || ([(target) isKindOfClass:[NSNumber class]] && [(NSNumber*)(target) integerValue]==0) || ([(target) isKindOfClass:[NSArray class]] && [(NSArray*)(target) count]==0))
 
-#define arj_present(target) (arj_not_nil((target)) && (([(target) isKindOfClass:[NSString class]] && [(NSString*)(target) length]!=0) || ([(target) isKindOfClass:[NSNumber class]] && [(NSNumber*)(target) integerValue]!=0) || ([(target) isKindOfClass:[NSArray class]] && [(NSArray*)(target) count]!=0)))
+#define arj_present(target) (arj_not_nil((target)) && (([(target) isKindOfClass:[NSString class]] && [(NSString*)(target) length]!=0) || ([(target) isKindOfClass:[NSNumber class]] && [(NSNumber*)(target) integerValue]!=0) || ([(target) isKindOfClass:[NSArray class]] && [(NSArray*)(target) count]!=0)) || (![(target) isKindOfClass:[NSArray class]] && ![(target) isKindOfClass:[NSNumber class]] && ![(target) isKindOfClass:[NSString class]]))
 
 #define arj_model(name) +(NSString*)model{return @#name;}
 
