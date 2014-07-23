@@ -24,8 +24,12 @@
 }
 
 -(void)setValue:(id)attribute forInstance:(ARJActiveRecord*)instance{
-    NSTimeInterval serial = [attribute timeIntervalSince1970];
-    [super setValue:@((NSInteger)serial) forInstance:instance];
+    if (arj_nil(attribute)) {
+        [super setValue:[NSNull null] forInstance:instance];
+    }else{
+        NSTimeInterval serial = [attribute timeIntervalSince1970];
+        [super setValue:@((NSInteger)serial) forInstance:instance];
+    }
 }
 
 -(NSString*)defaultValueSpecifier{

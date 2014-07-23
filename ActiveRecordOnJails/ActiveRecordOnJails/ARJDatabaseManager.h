@@ -20,13 +20,18 @@ typedef enum _ARJDatabaseLocation ARJDatabaseLocation;
 @property (nonatomic, strong) NSString *dbName;
 @property (nonatomic, strong) NSArray *models;
 @property (nonatomic, assign) ARJDatabaseLocation databaseLocation;
+-(NSString*)dbPath;
 +(ARJDatabaseManager*)defaultManager;
 -(BOOL)migrate;
+-(NSInteger)countModel:(Class)klass condition:(NSDictionary*)condition;
 -(id)findModel:(Class)klass condition:(NSDictionary*)condition;
+-(id)findModel:(Class)klass condition:(NSDictionary*)condition orderBy:(NSString*)orderBy;
 -(id)findModel:(Class)klass invocation:(ARJSQLInvocation*)invocation;
 -(id)findFirstModel:(Class)klass condition:(NSDictionary *)condition;
+-(id)findFirstModel:(Class)klass condition:(NSDictionary *)condition orderBy:(NSString*)orderBy;
 -(id)findFirstModel:(Class)klass invocation:(ARJSQLInvocation*)invocation;
 -(NSArray*)allModels:(Class)klass;
+-(NSArray*)allModels:(Class)klass orderBy:(NSString*)orderBy;
 -(BOOL)destroyInstance:(id)instance;
 -(BOOL)destroyAllModels:(Class)klass;
 -(BOOL)saveInstance:(id)instance;
@@ -34,6 +39,6 @@ typedef enum _ARJDatabaseLocation ARJDatabaseLocation;
 -(id)createModel:(Class)klass attributes:(NSDictionary*)attributes;
 -(BOOL)runInTransaction:(BOOL(^)(id database))block;
 -(BOOL)deleteDB;
-
+-(void)close;
 +(ARJDatabaseManager*)forRecord:(ARJActiveRecord*)record;
 @end

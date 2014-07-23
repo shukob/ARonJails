@@ -13,14 +13,39 @@
 #import "ARJActiveRecord.h"
 @implementation ARJBelongsToRelation
 -(BOOL)willDestroySourceInstance:(ARJActiveRecord*)instance{
-    ARJActiveRecord* destination = [instance associatedForKey:self.foreignKey];
+    id destination = [instance associatedForKey:self.relationName];
+    BOOL res = YES;
     if (self.dependency == ARJRelationDependencyDestroy) {
-        [destination destroy];
+        if ([destination isKindOfClass:[NSArray class]]) {
+            for (ARJActiveRecord *record in destination){
+                if(![record destroy]){
+                    res = NO;
+                    break;
+                }
+            }
+        }else{
+            if (![destination destroy]){
+                res = NO;
+            }
+        }
     }else if(self.dependency == ARJRelationDependencyNullify){
         ARJRelation *inverse = [self inverseRelation];
-        [destination update:@{inverse.associationKey: [NSNull null]}];
+        if ([destination isKindOfClass:[NSArray class]]) {
+            for (ARJActiveRecord *record in destination){
+                [record update:@{inverse.associationKey: [NSNull null]}];
+                if (record.errors.count) {
+                    res = NO;
+                    break;
+                }
+            }
+        }else{
+            [destination update:@{inverse.associationKey: [NSNull null]}];
+            if ([[destination errors]count]) {
+                res = NO;
+            }
+        }
     }
-    return YES;
+    return res;
 }
 
 -(BOOL)willDestroySourceInstance:(ARJActiveRecord *)instance inDatabaseManager:(ARJDatabaseManager *)manager{
@@ -28,7 +53,8 @@
 }
 
 -(NSDictionary*)attributes{
-    NSString *key = [[ARJExpectationHelper defaultHelper]nonCamelizedFromCamelized:[self.relationName stringByAppendingString:@"Id"]];
+//    NSString *key = [[ARJExpectationHelper defaultHelper]nonCamelizedFromCamelized:[self.relationName stringByAppendingString:@"Id"]];
+    NSString *key = [self.relationName stringByAppendingString:@"Id"];
     NSDictionary *dict = @{ARJAttributeNameSpecifier: key, ARJAttributeTypeSpecifier: ARJIntegerAttributeSpecifier};
     return @{key: [ARJModelAttribute modelAttributeWithDictionary:dict]};
 }
@@ -49,7 +75,15 @@
 
 -(id)destinationForSource:(ARJActiveRecord *)source inDatabaseManager:(ARJDatabaseManager *)manager{
     id _id = [source attributeForKey:self.associationKey];
-    return [[self destinationModel] findFirst:@{@"id" : _id} inDatabaseManager:manager];
+    if (!_id) {
+        return nil;
+    }else{
+        if (self.dictionary[ARJPrimaryKeySpecifier]) {
+            return [[self destinationModel] findFirst:@{self.dictionary[ARJPrimaryKeySpecifier] : _id} inDatabaseManager:manager];
+        }else{
+            return [[self destinationModel] findFirst:@{@"id" : _id} inDatabaseManager:manager];
+        }
+    }
 }
 
 

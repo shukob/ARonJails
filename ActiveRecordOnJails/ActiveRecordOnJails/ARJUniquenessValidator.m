@@ -18,11 +18,15 @@
         ARJActiveRecord * anotherRecord = [[instance class]findFirst:@{self.targetProperty : value}inDatabaseManager:manager];
         if (anotherRecord) {
             if ([anotherRecord Id] != [instance Id]) {
-                [instance.errors addErrorMessage:@"Uniqueness Error" forKey:self.targetProperty];
+                [instance.errors addErrorMessage:self.message forKey:self.messageTargetProperty];
                 res = NO;
             }
         }
         return res;
     }
+}
+
+-(NSString*)defaultMessage{
+    return @"Uniqueness error";
 }
 @end

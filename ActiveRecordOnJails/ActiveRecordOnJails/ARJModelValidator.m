@@ -126,4 +126,24 @@
     return self.dictionary[ARJValidationTargetSpecifier];
 }
 
+-(NSString*)messageTargetProperty{
+    if (self.dictionary[ARJValidationMessageSpecifier]) {
+        return ARJValidationBaseTargetSpecifier;
+    }else{
+        return self.targetProperty;
+    }
+}
+
+-(NSString*)message{
+    if(self.dictionary[ARJValidationMessageSpecifier]){
+        return self.dictionary[ARJValidationMessageSpecifier];
+    }else{
+        return self.defaultMessage;
+    }
+
+}
+
+-(NSString*)defaultMessage{
+    return @"";
+}
 @end

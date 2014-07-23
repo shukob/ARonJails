@@ -7,6 +7,7 @@
 //
 
 #import "ARJValidationErrors.h"
+#import "ARJActiveRecordHelper.h"
 @interface ARJValidationErrors()
 @property (nonatomic, strong) NSMutableDictionary * errors;
 @end
@@ -62,7 +63,11 @@
     NSMutableArray *res = [NSMutableArray array];
     for (NSString * key in self.errors.allKeys){
         for (NSString * mes in self.errors[key]){
-            [res addObject:[NSString stringWithFormat:@"%@ : %@", key , mes]];
+            if ([key isEqualToString:ARJValidationBaseTargetSpecifier]) {
+                [res addObject:[NSString stringWithFormat:@"%@", mes]];
+            }else{
+                [res addObject:[NSString stringWithFormat:@"%@ : %@", key , mes]];
+            }
         }
     }
     return res;

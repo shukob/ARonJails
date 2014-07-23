@@ -20,6 +20,7 @@ typedef enum _ARJModelValidatorValidationTiming{
 @property (nonatomic, strong) NSDictionary * dictionary;
 @property (nonatomic, readonly) NSString * targetProperty;
 @property (nonatomic, strong) NSMutableArray * predicates;
+@property (nonatomic, retain) NSString *message;
 @property (nonatomic, readonly) ARJModelValidatorValidationTiming validationTiming;
 -(id)initWithDictionary:(NSDictionary*)dictionary;
 +(ARJModelValidator*)modelValidatorWithDictionary:(NSDictionary*)dictionary;
@@ -31,4 +32,6 @@ typedef enum _ARJModelValidatorValidationTiming{
 -(NSArray*)validateValue:(id)value inDatabaseManager:(ARJDatabaseManager*)manager;
 -(BOOL)validateBlankValue:(id)value;
 -(BOOL)requiresValidationOnTiming:(ARJModelValidatorValidationTiming)timing;
+-(NSString*)defaultMessage;
+-(NSString*)messageTargetProperty;
 @end

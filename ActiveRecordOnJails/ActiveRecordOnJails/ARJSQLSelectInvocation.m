@@ -8,6 +8,7 @@
 
 #import "ARJSQLSelectInvocation.h"
 #import "ARJDatabaseManager.h"
+#import "FMDatabase.h"
 
 @implementation ARJSQLSelectInvocation
 

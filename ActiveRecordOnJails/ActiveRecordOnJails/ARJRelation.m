@@ -19,7 +19,7 @@
 @end
 
 @implementation ARJRelation
-@synthesize foreignKey = _foreignKey, associationKey = _associationKey, destinationModel = _destinationModel;
+@synthesize foreignKey = _foreignKey, associationKey = _associationKey, destinationModel = _destinationModel, primaryKey = _primaryKey;
 -(id)init{
     if ([super init]) {
         self.dictionary = [NSMutableDictionary dictionary];
@@ -45,10 +45,20 @@
         if (self.dictionary[ARJForeignKeySpecifier]) {
             _foreignKey = self.dictionary[ARJForeignKeySpecifier];
         }else{
-            _foreignKey = [[[self.sourceModel tableName]singularizeString] stringByAppendingString:@"_id"];
+            _foreignKey = [[[self.sourceModel tableName]singularizeString] stringByAppendingString:@"Id"];
         }
     }
     return _foreignKey;
+}
+-(NSString*)primaryKey{
+    if (!_primaryKey) {
+        if(self.dictionary[ARJPrimaryKeySpecifier]){
+            _primaryKey = self.dictionary[ARJPrimaryKeySpecifier];
+        }else{
+            _primaryKey = @"id";
+        }
+    }
+    return _primaryKey;
 }
 
 -(NSString*)associationKey{
@@ -56,7 +66,7 @@
         if (self.dictionary[ARJAssociationKeySpecifier]) {
             _associationKey = self.dictionary[ARJAssociationKeySpecifier];
         }else{
-            _associationKey = [[[self.destinationModel tableName]singularizeString] stringByAppendingString:@"_id"];
+            _associationKey = [[[self.destinationModel tableName]singularizeString] stringByAppendingString:@"Id"];
         }
     }
     return _associationKey;
@@ -87,7 +97,8 @@
 -(NSString*)inverseRelationKey{
     NSString *res = self.dictionary[ARJInverseRelationSpecifier];
     if (!res) {
-        res = [[ARJExpectationHelper defaultHelper]nonCamelizedFromCamelized:[[self sourceModel]model]];
+//        res = [[ARJExpectationHelper defaultHelper]nonCamelizedFromCamelized:[[self sourceModel]model]];
+        res = [[self sourceModel]model];
     }
     return res;
 }
@@ -137,7 +148,7 @@
     return [self.dictionary[ARJAutoSaveSpecifier]boolValue];
 }
 
-+(ARJDatabaseManager*)expectedDatabaseManagerForSource:(ARJActiveRecord*)source andDestination:(ARJActiveRecord*)destination{
++(ARJDatabaseManager*)expectedDatabaseManagerForSource:(ARJActiveRecord*)source andDestination:(id)destination{
     ARJDatabaseManager *manager = [destination correspondingDatabaseManager];
     if (!manager) {
         manager = [source correspondingDatabaseManager];
@@ -146,6 +157,26 @@
         manager =  [ARJDatabaseManager defaultManager];
     }
     return manager;
+}
+
+-(id)blankValue{
+    return [NSNull null];
+}
+-(NSString*)foreignRelationName{
+    return self.inverseRelation.relationName;
+}
+
+-(void)updateDependency{
+    if ([self.dictionary[ARJDependencySpecifier]isEqualToString:ARJDependencyDestroySpecifier]) {
+        _dependency = ARJRelationDependencyDestroy;
+    }else{
+        _dependency = ARJRelationDependencyNullify;
+    }
+}
+
+-(void)setDictionary:(NSDictionary *)dictionary{
+    _dictionary = dictionary;
+    [self updateDependency];
 }
 
 @end

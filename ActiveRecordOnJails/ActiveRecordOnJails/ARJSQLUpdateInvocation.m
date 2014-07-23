@@ -8,6 +8,7 @@
 
 #import "ARJSQLUpdateInvocation.h"
 #import "ARJDatabaseManager.h"
+#import "FMDatabase.h"
 @implementation ARJSQLUpdateInvocation
 
 -(id)invokeInDatabaseManager:(ARJDatabaseManager *)manager{

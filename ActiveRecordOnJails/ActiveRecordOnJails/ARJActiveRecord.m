@@ -16,14 +16,15 @@
 #import "ARJSQLInvocation.h"
 #import <objc/runtime.h>
 @interface ARJActiveRecord()
-@property (nonatomic, strong) NSMutableDictionary *relationCache;
 @property (nonatomic, assign) BOOL validated;
-@property (nonatomic, assign) BOOL saving;
+@property (nonatomic, strong) NSMutableDictionary *relationCache;
 @property (nonatomic, assign) BOOL savingAssociated;
+@property (nonatomic, strong) NSMutableDictionary *insertedButNotRetrievedAssociations;
+
 @end
 
 @implementation ARJActiveRecord
-
+arj_dynamic_properties_imp(created_at, updated_at);
 -(id)init{
     if ([super init]) {
         self._updateDictionary = [NSMutableDictionary dictionary];
@@ -74,7 +75,7 @@
 }
 
 +(NSDictionary*)callbacks{
-    return @{ARJCallbackTimingBeforeValidation : [NSMutableArray arrayWithObject:@"setUpDefaults:"]};//This must be mutable, because other before validation callbacks may be appended to it in subclass.
+    return @{ARJCallbackTimingBeforeValidation : [NSMutableArray arrayWithObject:@"setUpDefaults:"]};//This must be mutable, because other before-validation callbacks may be appended to it from within subclasses.
 }
 
 +(NSDictionary*)validations{
@@ -84,16 +85,25 @@
     return @{};
 }
 
-+(id)find:(NSDictionary*)condition{
-    return [self find:condition inDatabaseManager:[ARJDatabaseManager defaultManager]];
++(id)find:(id)condition{
+    return [self find:condition orderBy:nil];
 }
 
-+(id)findFirst:(NSDictionary*)condition{
-    return [self findFirst:condition inDatabaseManager:[ARJDatabaseManager defaultManager]];
++(id)findFirst:(id)condition{
+    return [self findFirst:condition orderBy:nil];
 }
 
 +(NSArray*)findAll{
-    return [self findAllInDatabaseManager:[ARJDatabaseManager defaultManager]];
+    return [self findAllOrderBy:nil];
+}
++(id)find:(id)condition orderBy:(NSString*)orderBy{
+    return [self find:condition orderBy:orderBy inDatabaseManager:[ARJDatabaseManager defaultManager]];
+}
++(id)findFirst:(id)condition orderBy:(NSString*)orderBy{
+    return [self findFirst:condition orderBy:orderBy inDatabaseManager:[ARJDatabaseManager defaultManager]];
+}
++(NSArray*)findAllOrderBy:(NSString*)orderBy{
+    return [self findAllOrderBy:orderBy inDatabaseManager:[ARJDatabaseManager defaultManager]];
 }
 
 -(BOOL)destroy{
@@ -112,24 +122,34 @@
     return [self create:attributes inDatabaseManager:[ARJDatabaseManager defaultManager]];
 }
 
-+(id)find:(NSDictionary*)condition inDatabaseManager:(ARJDatabaseManager*)manager{
-    if (!manager) {
-        manager = [ARJDatabaseManager defaultManager];
-    }
-    return [manager findModel:self condition:condition];
++(id)find:(id)condition inDatabaseManager:(ARJDatabaseManager*)manager{
+    return [self find:condition orderBy:nil inDatabaseManager:manager];
 }
 
-+(id)findFirst:(NSDictionary*)condition inDatabaseManager:(ARJDatabaseManager*)manager{
-    if (!manager) {
-        manager = [ARJDatabaseManager defaultManager];
-    }
-    return [manager findFirstModel:self condition:condition];
++(id)findFirst:(id)condition inDatabaseManager:(ARJDatabaseManager*)manager{
+   return [self findFirst:condition orderBy:nil inDatabaseManager:manager];
 }
 +(NSArray*)findAllInDatabaseManager:(ARJDatabaseManager*)manager{
+    return [self findAllOrderBy:nil inDatabaseManager:manager];
+}
+
++(id)find:(id)condition  orderBy:(NSString*)orderBy inDatabaseManager:(ARJDatabaseManager*)manager{
     if (!manager) {
         manager = [ARJDatabaseManager defaultManager];
     }
-    return [manager allModels:self];
+    return [manager findModel:self condition:condition orderBy:orderBy];
+}
++(id)findFirst:(id)condition  orderBy:(NSString*)orderBy inDatabaseManager:(ARJDatabaseManager*)manager{
+    if (!manager) {
+        manager = [ARJDatabaseManager defaultManager];
+    }
+    return [manager findFirstModel:self condition:condition orderBy:orderBy];
+}
++(NSArray*)findAllOrderBy:(NSString*)orderBy inDatabaseManager:(ARJDatabaseManager*)manager{
+    if (!manager) {
+        manager = [ARJDatabaseManager defaultManager];
+    }
+    return [manager allModels:self orderBy:orderBy];
 }
 
 +(void)destroyAllInDatabaseManager:(ARJDatabaseManager*)manager{
@@ -199,7 +219,7 @@
             if(![self willCreate]){
                 return NO;
             }
-            ARJActiveRecord* instance = [[self class]create:self._updateDictionary inDatabaseManager:manager];
+            ARJActiveRecord* instance = [[self class]create:self._updateDictionary relations:self.relationCache inDatabaseManager:manager];
             self._columnDictionary = instance._columnDictionary;
             if (![self didCreate]) {
                 return NO;
@@ -249,9 +269,12 @@
     }
 }
 
-+(id)create:(NSDictionary*)attributes inDatabaseManager:(ARJDatabaseManager*)manager{
++(id)create:(NSDictionary*)attributes relations:(NSDictionary*)relations inDatabaseManager:(ARJDatabaseManager*)manager{
     ARJActiveRecord * tempInstance = [self new];
     [tempInstance._updateDictionary addEntriesFromDictionary:attributes];
+    for (NSString *key in relations){
+        [tempInstance setAssociated:relations[key] forKey:key];
+    }
     if(![tempInstance willValidate]){
         return tempInstance;
     }
@@ -281,6 +304,11 @@
     }
 }
 
+
++(id)create:(NSDictionary*)attributes inDatabaseManager:(ARJDatabaseManager*)manager{
+    return [self create:attributes relations:nil inDatabaseManager:manager];
+}
+
 +(ARJScope*)scoped{
     return [[ARJScope SELECT]FROM:[self tableName]];
 }
@@ -294,7 +322,7 @@
 }
 
 -(ARJScope*)destroyScope{
-    return [[[ARJScope DELETE]FROM:[[self class]tableName]] WHERE:[self idWhereDictionary], nil];
+    return [[[ARJScope DELETE]FROM:[[self class]tableName]]WHERE:[self idWhereDictionary], nil];
 }
 
 -(NSDictionary*)idWhereDictionary{
@@ -310,6 +338,9 @@
 }
 
 -(void)setAttribute:(id)attribute forKey:(NSString *)key{
+    if (!attribute) {
+        attribute = [NSNull null];
+    }
     if ([[self attributeForKey:key]isEqual:attribute]) {
         return;
     }else{
@@ -339,16 +370,26 @@
         self.relationCache = [NSMutableDictionary dictionary];
     }
     id res = self.relationCache[key];
-    if(!res){
+    if(!res || [self.insertedButNotRetrievedAssociations[key]boolValue]){
         ARJRelation *relation = [[self class]relationForKey:key];
         res = [relation destinationForSource:self];
+        if ([res isKindOfClass:[NSArray class]] && [self.insertedButNotRetrievedAssociations[key]boolValue]) {
+            for (ARJActiveRecord *record in self.relationCache[key]){
+                if (![[ARJActiveRecordHelper defaultHelper]hasSameRecord:record inEnumerable:res]) {
+                    [res addObject:record];
+                }
+            }
+        }
+        self.relationCache[key] = res ? res : (self.relationCache[key] ? self.relationCache[key] : [relation blankValue]);
+        self.insertedButNotRetrievedAssociations[key] = @NO;
     }
-    return res;
+    return arj_nil(res) ? nil : res;
 }
 
 
 -(void)clearRelationCache{
     [self.relationCache removeAllObjects];
+    [self.insertedButNotRetrievedAssociations removeAllObjects];
 }
 
 -(NSInteger)Id{
@@ -361,13 +402,37 @@
     ARJRelation *relation  = [[self class]relationForKey:key];
     if(relation){
         self.relationCache[key]=associated;
+        if ([[relation attributes]count] && arj_not_nil(associated) && [associated Id]) {
+            NSNumber *Id = [associated attributeForKey:[relation primaryKey]];
+            [self setAttribute:Id forKey:[[relation attributes]allKeys][0]];
+        }
     }
 }
 
 -(void)insertAssociated:(id)associated forKey:(NSString *)key{
-    
-}
+    ARJRelation *relation  = [[self class]relationForKey:key];
+    if(relation){
+        if(!self.relationCache[key]){
+            self.relationCache[key]=[NSMutableArray array];
+        }
+        if (!self.insertedButNotRetrievedAssociations) {
+            self.insertedButNotRetrievedAssociations = [NSMutableDictionary dictionary];
+        }
+        NSIndexSet *sameObjectIndeces = [self.relationCache[key] indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+            return [obj Id] && [obj Id]==[associated Id];
+        }];
+        if ([sameObjectIndeces count]) {
+            [self.relationCache[key]replaceObjectAtIndex:sameObjectIndeces.firstIndex withObject:associated];
+        }else{
+            [self.relationCache[key]addObject:associated];
 
+        }
+        if(!self.insertedButNotRetrievedAssociations[key]){
+            //If not nil but @NO, then already retrieved and not neccesary to refresh.
+            self.insertedButNotRetrievedAssociations[key] = @YES;
+        }
+    }
+}
 
 -(BOOL)willDestroy{
     BOOL callbackResult = [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingBeforeDestroy];
@@ -399,7 +464,9 @@
 -(BOOL)willSave{
     NSDate *currentDate = [NSDate date];
     if ([self Id]==0) {
-        [self setAttribute:currentDate forKey:@"created_at"];
+        if (arj_nil(self.created_at)) {
+            [self setAttribute:currentDate forKey:@"created_at"];
+        }
     }
     [self setAttribute:currentDate forKey:@"updated_at"];
     
@@ -447,6 +514,10 @@
             break;
         case ARJActiveRecordCallbackTimingAfterInitialize:
             key = ARJCallbackTimingAfterInitialize;
+            break;
+        case ARJActiveRecordCallbackTimingAfterFetch:
+            key = ARJCallbackTimingAfterFetch;
+            break;
         default:
             break;
             
@@ -476,6 +547,7 @@
 -(BOOL)didValidate{
     return  [self invokeCallbackOnTiming:ARJActiveRecordCallbackTimingAfterValidation];;
 }
+
 
 +(ARJRelation*)relationForKey:(NSString*)key{
     return [self relations][key];
@@ -521,6 +593,8 @@
 -(id)latestValueForKey:(NSString *)key{
     if (self._updateDictionary[key]) {
         return self._updateDictionary[key];
+    }else if([[self class]relations][key]){
+        return [self associatedForKey:key];
     }else{
         return self._columnDictionary[key];
     }
@@ -535,7 +609,8 @@
     for (NSString * relationKey in [[self class]relations].allKeys){
         ARJRelation *relation = [[self class]relations][relationKey];
         if (relation.autosave) {
-            if (self.relationCache[relationKey] && ![self.relationCache[relationKey]saving]) {
+            BOOL res = YES;
+            if (self.relationCache[relationKey] && ([self.relationCache[relationKey] isKindOfClass:[NSArray class]] || (self.relationCache[relationKey] != [NSNull null] && [self.relationCache[relationKey]saving]))) {
                 if(![relation setDestinationInstance:self.relationCache[relationKey] toSourceInstance:self inDatabaseManager:self.correspondingDatabaseManager]){
                     res = NO;
                     break;
@@ -553,9 +628,10 @@
         if (temp) {
             self._columnDictionary = temp._columnDictionary;
             [self._updateDictionary removeAllObjects];;
-            [self.relationCache removeAllObjects];
+            [self clearRelationCache];
         }
     }
+    [self.errors clearErrors];
 }
 
 -(void)setId:(NSInteger)Id{
@@ -583,6 +659,13 @@
         for (NSString * key in dictionary){
             [self setAttribute:dictionary[key] forKey:key];
         }
+    }
+    return self;
+}
+
+-(id)initWithDictionary:(NSDictionary *)dictionary inDatabaseManager:(ARJDatabaseManager *)manager{
+    if ([self initWithDictionary:dictionary]) {
+        self.correspondingDatabaseManager = manager;
     }
     return self;
 }
@@ -627,22 +710,29 @@
 
 -(void)dealloc{
     [[ARJPropertyObserver defaultObserver]unRegister:self];
-    
 }
 
-#ifdef ARJ_USE_DYNAMIC_METHOD_IMP
+
++(NSInteger)count{
+    return [self countInDatabaseManager:[ARJDatabaseManager defaultManager]];
+}
+
++(NSInteger)countInDatabaseManager:(ARJDatabaseManager *)manager{
+    return [manager countModel:self condition:nil];
+}
+
 
 static Class referenceKlassFromKVOClass(Class klass){
     return klass;
-        //This is treated gracefully by KVO and not is necessary.
-//    static NSString * kvoClassPrefix = @"NSKVONotifying_";
-//    NSString *classString = NSStringFromClass(klass);
-//    if ([classString hasPrefix:kvoClassPrefix]){
-//        classString = [classString substringFromIndex:kvoClassPrefix.length];
-//        return NSClassFromString(classString);
-//    }else{
-//        return klass;
-//    }
+    //This is treated gracefully by KVO and not is necessary.
+    //    static NSString * kvoClassPrefix = @"NSKVONotifying_";
+    //    NSString *classString = NSStringFromClass(klass);
+    //    if ([classString hasPrefix:kvoClassPrefix]){
+    //        classString = [classString substringFromIndex:kvoClassPrefix.length];
+    //        return NSClassFromString(classString);
+    //    }else{
+    //        return klass;
+    //    }
 }
 
 static id arj_getter_IMP(id self, SEL _cmd){
@@ -681,7 +771,8 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
         [key deleteCharactersInRange:NSMakeRange([key length] - 1, 1)];
         NSString *firstChar = [key substringToIndex:1];
         [key replaceCharactersInRange:NSMakeRange(0, 1) withString:[firstChar lowercaseString]];
-        if ([referenceClass attributesWithRelationalKeys][key]) {
+        NSDictionary * temp =[referenceClass attributesWithRelationalKeys];
+        if (temp[key]) {
             class_addMethod([self class], aSEL, (IMP)arj_setter_IMP, "v@:@");
             return YES;
         }else if([referenceClass relations][key]){
@@ -690,7 +781,7 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
         }else{
             return NO;
         }
-
+        
     } else {
         NSString *key = NSStringFromSelector(aSEL);
         if ([referenceClass attributesWithRelationalKeys][key]) {
@@ -703,7 +794,47 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
             return NO;
         }
     }
+    
+}
+
+
+-(void)copyAttributesFromRecord:(ARJActiveRecord *)another withoutKeys:(NSArray *)keys{
+    for (NSString *key in [[self class]attributes]){
+        if ([keys indexOfObject:key] != NSNotFound) {
+            continue;
+        }
+        id value = [another attributeForKey:key];
+        
+        if (!value) {
+            value = [NSNull null];
+        }
+        [self setAttribute:value forKey:key];
+    }
+}
+
+-(void)copyAttributesFromRecord:(ARJActiveRecord*)another{
+    [self copyAttributesFromRecord:another withoutKeys:@[@"id"]];
 
 }
-#endif /*ARJ_DYNAMIC_METHOD_IMP*/
+
++(NSInteger)count:(id)condition{
+    return [self count:condition inDatabaseManager:[ARJDatabaseManager defaultManager]];
+}
+
++(NSInteger)count:(id)condition inDatabaseManager:(ARJDatabaseManager *)manager{
+    return [manager countModel:self condition:condition];
+}
+
+-(BOOL)isEqual:(id)object{
+    if ([object isKindOfClass:[ARJActiveRecord class]]) {
+        return [self isEqualToRecord:object];
+    }else{
+        return [super isEqual:object];
+    }
+}
+
+-(BOOL)isEqualToRecord:(ARJActiveRecord *)record{
+    return self.Id && self.Id == record.Id;
+}
+
 @end

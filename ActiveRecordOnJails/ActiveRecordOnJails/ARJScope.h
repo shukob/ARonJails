@@ -7,10 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "ARJSQLInvocation.h"
 extern NSString * const ARJScopeSQLString;
 extern NSString * const ARJScopeSQLParameters;
-@class ARJSQLInvocation;
 @interface ARJScope : NSObject
 
 +(ARJScope*)INSERT;

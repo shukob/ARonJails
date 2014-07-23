@@ -30,4 +30,5 @@ extern NSString * ARJSQLInvocationTypeSpecifier;
 -(id)initWithDictionary:(NSDictionary*)dictionary;
 +(ARJSQLInvocation*)SQLInvocationWithDictionary:(NSDictionary*)dictionary;
 -(id)invokeInDatabaseManager:(ARJDatabaseManager*)manager;
+-(id)invoke;
 @end

@@ -27,7 +27,7 @@
 -(id)init{
     if ([super init]) {
         self.dbLock = [NSRecursiveLock new];
-        self.databaseLocation = ARJDatabaseLocationDocuments;
+        self.databaseLocation = ARJDatabaseLocationCache;
 //        [self loadActiveRecords];
     }
     return self;
@@ -103,8 +103,8 @@
     if (![self.database open]) {
         return NO;
     }
-    self.database.logsErrors = YES;
-    self.database.traceExecution = YES;
+//    self.database.logsErrors = YES;
+//    self.database.traceExecution = YES;
     return [self runInTransaction:^BOOL(id database){
         for(NSString * model in self.models){
             Class klass = NSClassFromString(model);
@@ -158,7 +158,7 @@
     [self runInTransaction:^BOOL(id database){
         for (ARJModelAttribute * attribute in [targetAttributes allValues]){
             NSString *columnName = attribute.columnName;;
-            NSLog(@"%@", [attribute class]);
+//            NSLog(@"%@", [attribute class]);
             if (![self.database columnExists:columnName inTableWithName:tableName]) {
                 NSMutableString *query =[NSMutableString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ %@", tableName, columnName, attribute.columnTypeString];
                 if (!attribute.nullable) {
@@ -178,6 +178,30 @@
     }];
 }
 
+
+    
+-(NSInteger)countModel:(Class)klass condition:(id)condition{
+    ARJScope *scoped = [[klass scoped]COUNT];
+    scoped = [scoped WHERE:condition, nil];
+    ARJSQLInvocation *invocation = [scoped SQLInvocation];
+    __block NSInteger result = 0;
+    [self runInTransaction:^BOOL(id database){
+        FMResultSet *res = [self.database executeQuery:invocation.SQLString withArgumentsInArray:invocation.parameters];
+        
+        if(res){
+            while ([res next]) {
+                result = [res intForColumnIndex:0];
+            }
+            [res close];
+            return YES;
+        }else{
+            return NO;
+        }
+        
+    }];
+    return result;
+}
+
 -(id)findModel:(Class)klass invocation:(ARJSQLInvocation *)invocation{
     __block id result = @[];
     [self runInTransaction:^BOOL(id database){
@@ -190,6 +214,7 @@
                 NSDictionary *dict = [res resultDictionary];
                 [models addObject:[klass instanceWithDictionary:dict]];
                 [[models lastObject]setCorrespondingDatabaseManager:self];
+                [[models lastObject]invokeCallbackOnTiming:ARJActiveRecordCallbackTimingAfterFetch];
             }
             [res close];
             result = models;
@@ -203,12 +228,18 @@
 }
 
 -(id)findModel:(Class)klass condition:(NSDictionary*)condition{
+    return [self findModel:klass condition:condition orderBy:nil];
+}
+
+-(id)findModel:(Class)klass condition:(NSDictionary*)condition orderBy:(NSString*)orderBy{
     ARJScope *scoped = [klass scoped];
     scoped = [scoped WHERE:condition, nil];
+    if (orderBy) {
+        scoped = [scoped ORDER:orderBy];
+    }
     ARJSQLInvocation *invocation = [scoped SQLInvocation];
     return [self findModel:klass invocation:invocation];
 }
-
 
 -(id)findFirstModel:(Class)klass invocation:(ARJSQLInvocation *)invocation{
     __block id result = nil;
@@ -221,6 +252,8 @@
                 NSDictionary *dict = [res resultDictionary];
                 model = [klass instanceWithDictionary:dict];
                 [model setCorrespondingDatabaseManager:self];
+                [model invokeCallbackOnTiming:ARJActiveRecordCallbackTimingAfterFetch];
+
             }
             [res close];
             result = model;
@@ -233,16 +266,28 @@
     return result;
 }
 
+
+
 -(id)findFirstModel:(Class)klass condition:(NSDictionary*)condition{
+    return [self findFirstModel:klass condition:condition orderBy:nil];
+}
+
+-(id)findFirstModel:(Class)klass condition:(NSDictionary *)condition orderBy:(NSString*)orderBy{
     ARJScope *scoped = [klass scoped];
     scoped = [[scoped WHERE:condition, nil]LIMIT:1];
+    if (orderBy) {
+        scoped = [scoped ORDER:orderBy];
+    }
     ARJSQLInvocation* invocation = [scoped SQLInvocation];
     return [self findFirstModel:klass invocation:invocation];
-    
 }
 
 -(NSArray*)allModels:(Class)klass{
     return [self findModel:klass condition:nil];
+}
+
+-(NSArray*)allModels:(Class)klass orderBy:(NSString *)orderBy{
+    return [self findModel:klass condition:nil orderBy:orderBy];
 }
 
 
@@ -290,7 +335,7 @@
         BOOL res = [self.database executeUpdate:invocation.SQLString withArgumentsInArray:invocation.parameters];
         NSError *e = [self.database lastError];
         if (e.code) {
-            NSLog(@"");
+//            NSLog(@"");
         }
         if(res){
             rowId = self.database.lastInsertRowId;
@@ -314,23 +359,29 @@
 }
 
 -(BOOL)runInTransaction:(BOOL(^)(id))block{
-    if (self.database.inTransaction) {
+    @try {
+        
         [self.dbLock lock];
-        BOOL res = block(self.database);
-        [self.dbLock unlock];
-        return res;
-    }else{
-        [self.dbLock lock];
-        [self.database beginTransaction];
-        BOOL res = block(self.database);
-        if (res) {
-            [self.database commit];
+        if (self.database.inTransaction) {
+            BOOL res = block(self.database);
+            return res;
         }else{
-            [self.database rollback];
+            [self.database beginTransaction];
+            BOOL res = block(self.database);
+            if (res) {
+                [self.database commit];
+            }else{
+                [self.database rollback];
+            }
+            return res;
         }
-        [self.dbLock unlock];
-        return res;
     }
+    @catch (NSException *exception) {
+    }
+    @finally {
+        [self.dbLock unlock];
+    }
+
 }
 
 -(BOOL)deleteDB{
@@ -353,4 +404,12 @@ static ARJDatabaseManager *___instance;
         return [self defaultManager];
     }
 }
+
+-(void)close{
+    [self.dbLock lock];
+    [self.database close];
+    self.database = nil;
+    [self.dbLock unlock];
+}
+
 @end

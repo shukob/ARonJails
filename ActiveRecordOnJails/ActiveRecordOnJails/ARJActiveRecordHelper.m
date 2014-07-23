@@ -33,9 +33,12 @@ NSString * const ARJDependencyNullifySpecifier = @"nullify";
 NSString * const ARJAttributesSpecifier = @"attributes";
 NSString * const ARJRelationsSpecifier = @"relations";
 
+NSString * const ARJRelationDefaultOrderSpecifier = @"default_order";
+
 
 NSString * const ARJClassNameSpecifier = @"class";
 NSString * const ARJForeignKeySpecifier = @"foreign_key";
+NSString * const ARJPrimaryKeySpecifier = @"primary_key";
 NSString * const ARJAssociationKeySpecifier = @"association_key";
 NSString * const ARJDependencySpecifier = @"dependent";
 NSString * const ARJInverseRelationSpecifier = @"inverse_of";
@@ -85,6 +88,7 @@ NSString * const ARJCallbackTimingBeforeDestroy = @"before_destroy";
 NSString * const ARJCallbackTimingAfterDestroy = @"after_destroy";
 NSString * const ARJCallbackTimingAfterCommit = @"after_commit";
 NSString * const ARJCallbackTimingAfterInitialize = @"after_initialize";
+NSString * const ARJCallbackTimingAfterFetch = @"after_fetch";
 
 NSString * const ARJCallbackTimingSpecifier = @"callback_at";
 NSString * const ARJCallbackFunctionSpecifier = @"callback_function";
@@ -122,6 +126,12 @@ static ARJActiveRecordHelper * ___instance;
         ___instance = [ARJActiveRecordHelper new];
     }
     return ___instance;
+}
+
+-(BOOL)hasSameRecord:(ARJActiveRecord*)record inEnumerable:(id)enumerable{
+    return [[enumerable indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        return [obj Id] && [obj Id]==[record Id];
+    }]count] != 0;
 }
 
 @end

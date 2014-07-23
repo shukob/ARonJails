@@ -15,6 +15,7 @@
 }
 
 -(BOOL)willDestroySourceInstance:(ARJActiveRecord *)instance inDatabaseManager:(ARJDatabaseManager *)manager{
+    [instance reload];
     return [manager runInTransaction:^BOOL(id database){
         for (ARJActiveRecord * record in [instance associatedForKey:self.relationName]){
             if (self.dependency == ARJRelationDependencyNullify) {
@@ -33,6 +34,21 @@
 
 -(NSDictionary*)attributes{
     return @{};
+}
+
++(ARJDatabaseManager*)expectedDatabaseManagerForSource:(ARJActiveRecord*)source andDestination:(id)destination{
+    
+    ARJDatabaseManager *manager = nil;
+    if (destination && [destination count]) {
+        manager = [[destination objectAtIndex:0] correspondingDatabaseManager];
+    }
+    if (!manager) {
+        manager = [source correspondingDatabaseManager];
+    }
+    if (!manager) {
+        manager =  [ARJDatabaseManager defaultManager];
+    }
+    return manager;
 }
 
 -(BOOL)setDestinationInstance:(id)destination toSourceInstance:(id)source{
@@ -55,22 +71,51 @@
                 }
             }
         }
-        [destination setAttribute:@([source Id]) forKey:self.foreignKey];
-        if (![destination saveInDatabaseManager:manager]) {
-            return NO;
-        }else{
+        if ([destination isKindOfClass:[NSArray class]]) {
+            //TODO make it one transaction for all records
+            for (ARJActiveRecord *record in destination){
+                [record setAttribute:@([source Id]) forKey:self.foreignKey];
+                
+
+                if (![record saveInDatabaseManager:manager]) {
+                    return NO;
+                }
+            }
             return YES;
+        }else{
+            [destination setAttribute:@([source Id]) forKey:self.foreignKey];
+            if (![destination saveInDatabaseManager:manager]) {
+                return NO;
+            }else{
+                return YES;
+            }
         }
+        
     }];
 }
 
 -(id)destinationForSource:(ARJActiveRecord *)source inDatabaseManager:(ARJDatabaseManager *)manager{
-    return [self.destinationModel find:@{self.foreignKey : @([source Id])} inDatabaseManager:manager];
+    if (![source Id]) {
+        return [NSMutableArray array];
+    }else{
+        if (self.dictionary[ARJRelationDefaultOrderSpecifier]) {
+            ARJScope *scope = [self.destinationModel scoped];
+            ARJSQLInvocation *invocation = [[[scope WHERE:@{self.foreignKey: @([source Id])}, nil]ORDER:self.dictionary[ARJRelationDefaultOrderSpecifier]]SQLInvocation];
+            NSMutableArray *res = [NSMutableArray arrayWithArray:[manager findModel:self.destinationModel invocation:invocation]];
+            return res;
+        }else{
+            NSMutableArray * res =  [NSMutableArray arrayWithArray:[self.destinationModel find:@{self.foreignKey : @([source Id])} inDatabaseManager:manager]];
+            return res;
+        }
+    }
 }
 
 -(id)destinationForSource:(ARJActiveRecord *)source{
     return [self destinationForSource:source inDatabaseManager:source.correspondingDatabaseManager];
 }
 
+-(id)blankValue{
+    return [NSMutableArray array];
+}
 
 @end

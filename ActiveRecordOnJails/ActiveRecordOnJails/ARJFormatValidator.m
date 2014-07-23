@@ -32,12 +32,17 @@
     if ([value isKindOfClass:[NSString class]]) {
         NSArray * matches = [self.regex matchesInString:value options:0 range:NSMakeRange(0, [value length])];
         if (!matches.count) {
-            [array addObject:[NSString stringWithFormat:@"Format Error: %@", self.regex.pattern]];
+            [array addObject:self.message];
         }
     }else{
         
     }
     return array;
+}
+
+
+-(NSString*)defaultMessage{
+    return [NSString stringWithFormat:@"%@ : Format error %@", self.messageTargetProperty, self.regex];
 }
 
 @end

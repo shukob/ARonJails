@@ -27,6 +27,7 @@ NS_ENUM(NSInteger, _ARJActiveRecordCallbackTiming){
     ARJActiveRecordCallbackTimingAfterDestroy,
     ARJActiveRecordCallbackTimingAfterCommit,
     ARJActiveRecordCallbackTimingAfterInitialize,
+    ARJActiveRecordCallbackTimingAfterFetch,
 };
 typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 
@@ -34,11 +35,16 @@ typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 @property (nonatomic, assign) NSInteger Id;
 @property (nonatomic, strong) NSDictionary *_columnDictionary;
 @property (nonatomic, strong) NSMutableDictionary * _updateDictionary;
+
 @property (nonatomic, readonly) BOOL valid;
 @property (nonatomic, strong) ARJValidationErrors *errors;
 @property (nonatomic, assign) BOOL changed;
+@property (nonatomic, assign) BOOL saving;
 @property (nonatomic, weak) ARJDatabaseManager * correspondingDatabaseManager;
+arj_typed_property(NSDate*, created_at);
+arj_typed_property(NSDate*, updated_at);
 -(id)initWithDictionary:(NSDictionary*)dictionary;
+-(id)initWithDictionary:(NSDictionary *)dictionary inDatabaseManager:(ARJDatabaseManager*)manager;
 -(id)latestValueForKey:(NSString*)key;
 +(ARJActiveRecord*)instanceWithDictionary:(NSDictionary*)dictionary;
 +(NSDictionary*)schema;
@@ -54,9 +60,13 @@ typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 
 
 /* uses defaultManager */
-+(id)find:(NSDictionary*)condition;
-+(id)findFirst:(NSDictionary*)condition;
++(NSInteger)count:(id)condition;
++(id)find:(id)condition;
++(id)findFirst:(id)condition;
 +(NSArray*)findAll;
++(id)find:(id)condition orderBy:(NSString*)orderBy;
++(id)findFirst:(id)condition orderBy:(NSString*)orderBy;
++(NSArray*)findAllOrderBy:(NSString*)orderBy;
 +(void)destroyAll;
 -(BOOL)destroy;
 -(BOOL)save;
@@ -66,9 +76,13 @@ typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 +(id)executeScopeForKey:(NSString*)name withParams:(NSDictionary*)params;
 
 /* uses specific manager */
-+(id)find:(NSDictionary*)condition inDatabaseManager:(ARJDatabaseManager*)manager;
-+(id)findFirst:(NSDictionary*)condition inDatabaseManager:(ARJDatabaseManager*)manager;
++(NSInteger)count:(id)condition inDatabaseManager:(ARJDatabaseManager*)manager;
++(id)find:(id)condition inDatabaseManager:(ARJDatabaseManager*)manager;
++(id)findFirst:(id)condition inDatabaseManager:(ARJDatabaseManager*)manager;
 +(NSArray*)findAllInDatabaseManager:(ARJDatabaseManager*)manager;
++(id)find:(id)condition  orderBy:(NSString*)orderBy inDatabaseManager:(ARJDatabaseManager*)manager;
++(id)findFirst:(id)condition  orderBy:(NSString*)orderBy inDatabaseManager:(ARJDatabaseManager*)manager;
++(NSArray*)findAllOrderBy:(NSString*)orderBy inDatabaseManager:(ARJDatabaseManager*)manager;
 +(void)destroyAllInDatabaseManager:(ARJDatabaseManager*)manager;
 -(BOOL)destroyInDatabaseManager:(ARJDatabaseManager*)manager;
 -(BOOL)saveInDatabaseManager:(ARJDatabaseManager*)manager;
@@ -104,8 +118,13 @@ typedef enum _ARJActiveRecordCallbackTiming ARJActiveRecordCallbackTiming;
 -(BOOL)saveAssociated;
 
 -(void)reload;
-
+-(void)copyAttributesFromRecord:(ARJActiveRecord*)another;
+-(void)copyAttributesFromRecord:(ARJActiveRecord *)another withoutKeys:(NSArray*)keys;
+-(BOOL)invokeCallbackOnTiming:(ARJActiveRecordCallbackTiming)timing;
 //Pre-defined callback function
 -(id)setUpDefaults:(id)sender;
+
+
+-(BOOL)isEqualToRecord:(ARJActiveRecord*)record;
 
 @end

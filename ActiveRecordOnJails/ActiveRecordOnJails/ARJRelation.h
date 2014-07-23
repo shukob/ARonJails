@@ -29,13 +29,15 @@ typedef enum _ARJRelationDependency{
 -(BOOL)setDestinationInstance:(id)destination toSourceInstance:(id)source inDatabaseManager:(ARJDatabaseManager*)manager;
 -(id)destinationForSource:(ARJActiveRecord*)source inDatabaseManager:(ARJDatabaseManager*)manager;
 -(NSString*)inverseRelationKey;
-+(ARJDatabaseManager*)expectedDatabaseManagerForSource:(ARJActiveRecord*)source andDestination:(ARJActiveRecord*)destination;
-
++(ARJDatabaseManager*)expectedDatabaseManagerForSource:(ARJActiveRecord*)source andDestination:(id)destination;
+-(id)blankValue;
 @property (nonatomic, readonly) NSDictionary *attributes;
 @property (nonatomic, readonly) NSString *relationName;
 @property (nonatomic, readonly) NSString *foreignKey;
 @property (nonatomic, readonly) NSString *associationKey;
+@property (nonatomic, readonly) NSString *primaryKey;
 @property (nonatomic, readonly) NSString *foreignClassName;
+@property (nonatomic, readonly) NSString *foreignRelationName;
 @property (nonatomic, readonly) ARJRelationDependency dependency;
 @property (nonatomic, readonly) Class destinationModel;
 @property (nonatomic, readonly) ARJRelation *inverseRelation;

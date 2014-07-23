@@ -103,21 +103,25 @@ typedef enum _ARJScopeOperationType ARJScopeOperationType;
     
     if ([self.params[ARJScopeValuesValues]count]) {
         [sql appendFormat:@"("];
+        NSInteger index = 0;
         for (NSString *column in self.params[ARJScopeColumnsClause]){
             [sql appendString:column];
-            if(column != [self.params[ARJScopeColumnsClause]lastObject]){
+            if(index != [self.params[ARJScopeColumnsClause] count]-1){
                 [sql appendString:@", "];
             }else{
                 [sql appendString:@") VALUES ("];
             }
+            ++index;
         }
+        index = 0;
         for (NSString * value in self.params[ARJScopeValuesValues]){
             [sql appendString:@"?"];
-            if(value != [self.params[ARJScopeValuesValues]lastObject]){
+            if(index != [self.params[ARJScopeValuesValues] count]-1){
                 [sql appendString:@", "];
             }else{
                 [sql appendString:@") "];
             }
+            ++index;
         }
     }else if(self.operationType == ARJScopeOperationTypeInsert){
         [sql appendString:@" DEFAULT VALUES "];

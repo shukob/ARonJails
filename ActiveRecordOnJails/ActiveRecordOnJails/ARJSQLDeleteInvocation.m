@@ -8,6 +8,7 @@
 
 #import "ARJSQLDeleteInvocation.h"
 #import "ARJDatabaseManager.h"
+#import "FMDatabase.h"
 @implementation ARJSQLDeleteInvocation
 -(id)invokeInDatabaseManager:(ARJDatabaseManager *)manager{
     __block id res = nil;

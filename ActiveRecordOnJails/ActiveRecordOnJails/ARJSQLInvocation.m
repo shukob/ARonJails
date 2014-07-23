@@ -11,6 +11,7 @@
 #import "ARJSQLUpdateInvocation.h"
 #import "ARJSQLDeleteInvocation.h"
 #import "ARJSQLInsertInvocation.h"
+#import "ARJDatabaseManager.h"
 
 NSString * ARJSQLInvocationSQLStringSpecifier = @"ARJSQLInvocationSQLStringSpecifier";
 NSString * ARJSQLInvocationSQLParametersSpecifier = @"ARJSQLInvocationSQLParametersSpecifier";
@@ -48,6 +49,10 @@ NSString * ARJSQLInvocationTypeSpecifier = @"ARJSQLInvocationTypeSpecifier";
 -(id)invokeInDatabaseManager:(ARJDatabaseManager*)manager{
     [self doesNotRecognizeSelector:@selector(invokeInDatabaseManager:)];
     return nil;
+}
+
+-(id)invoke{
+    return [self invokeInDatabaseManager:[ARJDatabaseManager defaultManager]];
 }
 
 -(NSString*)SQLString{

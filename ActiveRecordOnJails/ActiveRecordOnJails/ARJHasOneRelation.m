@@ -62,7 +62,7 @@
                 }
             }
         }
-        [destination setAttribute:@([source Id]) forKey:self.foreignKey];
+        [destination setAttribute:[source attributeForKey:[[self inverseRelation]primaryKey]] forKey:self.foreignKey];
         if (![destination saveInDatabaseManager:manager]) {
             return NO;
         }else{
@@ -72,7 +72,11 @@
 }
 
 -(id)destinationForSource:(ARJActiveRecord *)source inDatabaseManager:(ARJDatabaseManager *)manager{
-    return [self.destinationModel findFirst:@{self.foreignKey : @([source Id])} inDatabaseManager:manager];
+    if (![source Id]) {
+        return nil;
+    }else{
+        return [self.destinationModel findFirst:@{self.foreignKey : [source attributeForKey:[self.inverseRelation primaryKey]]} inDatabaseManager:manager];
+    }
 }
 
 -(id)destinationForSource:(ARJActiveRecord *)source{
