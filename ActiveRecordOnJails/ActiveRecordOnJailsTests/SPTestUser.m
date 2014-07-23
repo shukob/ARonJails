@@ -19,8 +19,11 @@ arj_attributes(arj_string(name, ARJAttributeDefaultValueSpecifier : @"test"),
                arj_float(height),
                arj_string(email));
 
+arj_dynamic_property_imp(name);
 
-arj_relations(arj_belongs_to(organization, ARJClassNameSpecifier : @"SPTestOrganization", ARJAutoSaveSpecifier : @YES));
+arj_relations(arj_belongs_to(organization, ARJClassNameSpecifier : @"SPTestOrganization", ARJAutoSaveSpecifier : @YES),
+              arj_belongs_to(parent, ARJClassNameSpecifier: @"SPTestUser", ARJAssociationKeySpecifier : @"parent_id", ARJInverseRelationSpecifier : @"children", ARJAutoSaveSpecifier : @YES),
+              arj_has_many(children, ARJClassNameSpecifier: @"SPTestUser", ARJForeignKeySpecifier : @"parent_id", ARJDependencySpecifier : ARJDependencyDestroySpecifier, ARJInverseRelationSpecifier : @"parent", ARJAutoSaveSpecifier : @YES));
 
 
 arj_validations(arj_validates_length_of(name, ARJValidationLessThanOrEqualToSpecifier : @(12), ARJValidationAllowBlankSpecifier : @YES),

@@ -173,4 +173,53 @@
 }
 
 #endif /*ARJ_USE_DYNAMIC_METHOD_IMP*/
+
+-(void)testInsertToHasMany{
+    SPTestUser *user = [SPTestUser new];
+//    [user save];
+    SPTestOrganization *org = [SPTestOrganization new];
+    [org save];
+    [org insertAssociated:user forKey:@"users"];
+    STAssertTrue([[org associatedForKey:@"users"]count]==1, @"inserted");
+    [org reload];
+    STAssertTrue([[org associatedForKey:@"users"]count]==1, @"retrieved after reload");
+    [org save];
+    SPTestUser *user2 = [SPTestUser new];
+    [user2 save];
+    [org insertAssociated:user2 forKey:@"users"];
+    STAssertTrue([[org associatedForKey:@"users"]count]==2, @"2 inserted");
+    [org reload];
+    STAssertTrue([[org associatedForKey:@"users"]count]==2, @"retrieved after 1 insertion and reload");
+    
+    [org insertAssociated:user2 forKey:@"users"];
+    STAssertTrue([[org associatedForKey:@"users"]count]==2, @"same object does not duplicates");
+}
+
+-(void)testDestroyDependency{
+    SPTestOrganization *org = [[SPTestOrganization alloc]initWithDictionary:@{@"name" : @"test"}];
+    [org save];
+    [org insertAssociated:[SPTestUser new] forKey:@"users"];
+    [org insertAssociated:[SPTestUser new] forKey:@"users"];
+    STAssertTrue([[org associatedForKey:@"users"]count]==2, @"2 inserted");
+    [org destroy];
+    STAssertTrue([SPTestUser count:nil]==0, @"dependency destroyed");
+}
+
+-(void)testCount{
+    [SPTestUser create:nil];
+    STAssertTrue([SPTestUser count:nil]==1, @"correctly counted");
+}
+
+-(void)testRecursiveRelationship{
+    SPTestUser *child = [SPTestUser create:nil];
+    SPTestUser *parent = [SPTestUser create:nil];
+    [child setAssociated:parent forKey:@"parent"];
+    [child save];
+    [child reload];
+    [parent reload];
+    
+    STAssertNotNil([child associatedForKey:@"parent"], @"recursive relation");
+    STAssertTrue([[parent associatedForKey:@"children"]count]==1, @"recursive relation");
+}
+
 @end

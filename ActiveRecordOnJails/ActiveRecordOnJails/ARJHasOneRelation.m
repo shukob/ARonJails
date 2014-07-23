@@ -75,7 +75,11 @@
     if (![source Id]) {
         return nil;
     }else{
+<<<<<<< HEAD
         return [self.destinationModel findFirst:@{self.foreignKey : [source attributeForKey:[self.inverseRelation primaryKey]]} inDatabaseManager:manager];
+=======
+        return [self.destinationModel findFirst:@{self.foreignKey : @([source Id])} inDatabaseManager:manager];
+>>>>>>> 876aec35a500d970db58d7f6c8e52e5a6a16e90d
     }
 }
 

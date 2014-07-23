@@ -99,7 +99,6 @@ extern NSString * const ARJCallbackFunctionSpecifier;
 
 #define arj_blank(target) (!arj_present(target))
 
-
 #define arj_model(name) +(NSString*)model{return @#name;}
 
 #define arj_attributes_with_relational_keys static NSMutableDictionary *__arj__attributes__with_relational__keys_cache;\
