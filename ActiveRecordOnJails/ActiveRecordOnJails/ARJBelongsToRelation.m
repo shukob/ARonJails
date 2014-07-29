@@ -54,7 +54,8 @@
 
 -(NSDictionary*)attributes{
 //    NSString *key = [[ARJExpectationHelper defaultHelper]nonCamelizedFromCamelized:[self.relationName stringByAppendingString:@"Id"]];
-    NSString *key = [self.relationName stringByAppendingString:@"Id"];
+//    NSString *key = [self.relationName stringByAppendingString:@"Id"];
+    NSString *key = [self associationKey];
     NSDictionary *dict = @{ARJAttributeNameSpecifier: key, ARJAttributeTypeSpecifier: ARJIntegerAttributeSpecifier};
     return @{key: [ARJModelAttribute modelAttributeWithDictionary:dict]};
 }

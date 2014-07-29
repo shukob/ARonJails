@@ -66,7 +66,8 @@
         if (self.dictionary[ARJAssociationKeySpecifier]) {
             _associationKey = self.dictionary[ARJAssociationKeySpecifier];
         }else{
-            _associationKey = [[[self.destinationModel tableName]singularizeString] stringByAppendingString:@"Id"];
+//            _associationKey = [[[self.destinationModel tableName]singularizeString] stringByAppendingString:@"Id"];
+            _associationKey = [self.relationName stringByAppendingString:@"Id"];
         }
     }
     return _associationKey;
