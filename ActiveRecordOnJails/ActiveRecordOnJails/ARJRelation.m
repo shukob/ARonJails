@@ -66,7 +66,6 @@
         if (self.dictionary[ARJAssociationKeySpecifier]) {
             _associationKey = self.dictionary[ARJAssociationKeySpecifier];
         }else{
-//            _associationKey = [[[self.destinationModel tableName]singularizeString] stringByAppendingString:@"Id"];
             _associationKey = [self.relationName stringByAppendingString:@"Id"];
         }
     }
@@ -100,6 +99,7 @@
     if (!res) {
 //        res = [[ARJExpectationHelper defaultHelper]nonCamelizedFromCamelized:[[self sourceModel]model]];
         res = [[self sourceModel]model];
+        res = [[[res substringToIndex:1]lowercaseString]stringByAppendingString:[res substringFromIndex:1]];
     }
     return res;
 }
