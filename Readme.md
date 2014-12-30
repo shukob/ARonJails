@@ -4,8 +4,7 @@ Active Record on Jails
 RoR style ActiveRecord ORM Wrapper over FMDB on iOS
 
 
-###Currently not fully tested, documented nor featured.
-###It is absolutely not recommended to use this in any product now.
+#Used in some production apps
 
 features
 ---------
@@ -125,8 +124,7 @@ XYZOrganization *org = [[XYZOrgzanization alloc]initWithDictionary:@{@"name" : @
 
 org = [XYZOrganization findFirst:@{}]; // @"name" is @"Example Inc."
 
-[user setAssociated:@(-1) forKey:@"age"];
-[user save]; // => returns NO and user.errors.count becomes 1
-
+[user setAttribute:@(-1) forKey:@"age"];
+[user save]; // => returns NO and user.errors.count becomes 1 
 
 ```
