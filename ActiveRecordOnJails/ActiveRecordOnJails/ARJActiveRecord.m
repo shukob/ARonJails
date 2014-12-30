@@ -610,11 +610,7 @@ arj_dynamic_properties_imp(created_at, updated_at);
         ARJRelation *relation = [[self class]relations][relationKey];
         if (relation.autosave) {
             BOOL res = YES;
-<<<<<<< HEAD
             if (self.relationCache[relationKey] && ([self.relationCache[relationKey] isKindOfClass:[NSArray class]] || (self.relationCache[relationKey] != [NSNull null] && [self.relationCache[relationKey]saving]))) {
-=======
-            if (self.relationCache[relationKey] && ([self.relationCache[relationKey] isKindOfClass:[NSArray class]] || ![self.relationCache[relationKey]saving])) {
->>>>>>> 876aec35a500d970db58d7f6c8e52e5a6a16e90d
                 if(![relation setDestinationInstance:self.relationCache[relationKey] toSourceInstance:self inDatabaseManager:self.correspondingDatabaseManager]){
                     res = NO;
                     break;
@@ -714,18 +710,6 @@ arj_dynamic_properties_imp(created_at, updated_at);
 
 -(void)dealloc{
     [[ARJPropertyObserver defaultObserver]unRegister:self];
-<<<<<<< HEAD
-=======
-}
-
-
-+(NSInteger)count{
-    return [self countInDatabaseManager:[ARJDatabaseManager defaultManager]];
-}
-
-+(NSInteger)countInDatabaseManager:(ARJDatabaseManager *)manager{
-    return [manager countModel:self condition:nil];
->>>>>>> 876aec35a500d970db58d7f6c8e52e5a6a16e90d
 }
 
 
@@ -736,7 +720,6 @@ arj_dynamic_properties_imp(created_at, updated_at);
 +(NSInteger)countInDatabaseManager:(ARJDatabaseManager *)manager{
     return [manager countModel:self condition:nil];
 }
-
 
 static Class referenceKlassFromKVOClass(Class klass){
     return klass;
@@ -811,7 +794,6 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
         }
     }
     
-<<<<<<< HEAD
 }
 
 
@@ -834,13 +816,6 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
 
 }
 
-+(NSInteger)count:(id)condition{
-    return [self count:condition inDatabaseManager:[ARJDatabaseManager defaultManager]];
-}
-
-+(NSInteger)count:(id)condition inDatabaseManager:(ARJDatabaseManager *)manager{
-    return [manager countModel:self condition:condition];
-}
 
 -(BOOL)isEqual:(id)object{
     if ([object isKindOfClass:[ARJActiveRecord class]]) {
@@ -850,25 +825,7 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
     }
 }
 
-=======
-}
 
-
-#endif /*ARJ_DYNAMIC_METHOD_IMP*/
-
--(void)copyAttributesFromRecord:(ARJActiveRecord*)another{
-    for (NSString *key in [[self class]attributes]){
-        if ([key isEqualToString:@"id"]) {
-            continue;
-        }
-        id value = [another attributeForKey:key];
-        
-        if (!value) {
-            value = [NSNull null];
-        }
-        [self setAttribute:value forKey:key];
-    }
-}
 
 +(NSInteger)count:(NSDictionary *)condition{
     return [self count:condition inDatabaseManager:[ARJDatabaseManager defaultManager]];
@@ -879,7 +836,6 @@ static void arj_setter_IMP(id self, SEL _cmd, id value){
 }
 
 
->>>>>>> 876aec35a500d970db58d7f6c8e52e5a6a16e90d
 -(BOOL)isEqualToRecord:(ARJActiveRecord *)record{
     return self.Id && self.Id == record.Id;
 }
