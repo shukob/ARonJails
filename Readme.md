@@ -1,10 +1,9 @@
 Active Record on Jails
 =========
 
-RoR style ActiveRecord ORM Wrapper over FMDB on iOS
+RoR style ActiveRecord ORM Wrapper over FMDB on iOS.
 
-
-#Used in some production apps
+Used in some production apps
 
 features
 ---------
